@@ -1,0 +1,15 @@
+<svg width="1600" height="1050" viewBox="0 0 1600 1050" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1050" fill="#D6C0A6"/>
+  <rect x="88" y="80" width="1040" height="890" fill="#EEE4D3"/>
+  <rect x="1190" y="620" width="300" height="96" fill="#E9DCC9"/>
+  <rect x="1190" y="740" width="300" height="96" fill="#E9DCC9"/>
+  <rect x="1190" y="860" width="300" height="96" fill="#E9DCC9"/>
+  <text x="158" y="300" fill="#4B351F" font-family="Arial, sans-serif" font-size="176" font-weight="700">Thai</text>
+  <text x="158" y="480" fill="#4B351F" font-family="Arial, sans-serif" font-size="176" font-weight="700">Nari</text>
+  <text x="158" y="870" fill="#72533A" font-family="Arial, sans-serif" font-size="31">Calm wellness interface</text>
+  <text x="1236" y="682" fill="#4B351F" font-family="Arial, sans-serif" font-size="30">Services</text>
+  <text x="1236" y="802" fill="#4B351F" font-family="Arial, sans-serif" font-size="30">Rituals</text>
+  <text x="1236" y="922" fill="#4B351F" font-family="Arial, sans-serif" font-size="30">Booking</text>
+  <line x1="88" y1="80" x2="1128" y2="80" stroke="#4B351F" stroke-opacity=".24"/>
+  <line x1="88" y1="970" x2="1490" y2="970" stroke="#4B351F" stroke-opacity=".24"/>
+</svg>

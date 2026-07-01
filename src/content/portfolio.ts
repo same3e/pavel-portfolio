@@ -1,10 +1,14 @@
 export const site = {
   name: "Pavel Kostin",
-  title: "Pavel - Web Designer & Developer in Tbilisi",
+  shortName: "PAVEL",
+  monogram: "PK",
+  title: "Pavel Kostin - Web Designer & Developer in Tbilisi",
   description:
     "Independent web designer and developer creating visually strong websites for modern businesses in Tbilisi and worldwide.",
   availability: "Available for new projects",
-  location: "Tbilisi / Worldwide"
+  location: "Tbilisi / Worldwide",
+  productionUrl: "https://pavel-portfolio-six.vercel.app/",
+  repositoryUrl: "https://github.com/same3e/pavel-portfolio"
 };
 
 export const navigation = [
@@ -15,14 +19,10 @@ export const navigation = [
 ];
 
 export const contact = {
-  instagram: "REPLACE_WITH_INSTAGRAM_URL",
-  telegram: "REPLACE_WITH_TELEGRAM_URL",
-  whatsapp: "REPLACE_WITH_WHATSAPP_URL",
-  email: "REPLACE_WITH_EMAIL"
-};
-
-export const projectLinks = {
-  thaiNari: "REPLACE_WITH_THAI_NARI_LIVE_URL"
+  email: "kostinpavel447@gmail.com",
+  instagram: "https://www.instagram.com/pavel.websites?igsh=c29leDNkc3EwcDNk&utm_source=qr",
+  telegram: "https://t.me/cndjchsjw",
+  whatsapp: "https://wa.me/995599174299"
 };
 
 export const homepageServices = [
@@ -40,19 +40,46 @@ export const homepageServices = [
   }
 ];
 
-export const project = {
-  slug: "thai-nari",
-  title: "Thai Nari",
-  category: "Thai SPA & Wellness",
-  service: "Web Design & Development",
-  status: "Concept Project / 2026",
-  intro:
-    "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
-  role: "Art Direction, UI Design, Development, Motion",
-  year: "2026",
-  type: "Concept Project",
-  route: "/work/thai-nari"
-};
+export const projects = [
+  {
+    id: "thai-nari",
+    title: "Thai Nari",
+    year: "2026",
+    category: "Thai SPA & Wellness",
+    type: "Concept Project",
+    role: "Art Direction, UI Design, Development, Motion",
+    overview:
+      "A digital experience for a Thai wellness studio, created to translate its calm atmosphere into a refined and easy-to-explore website.",
+    description:
+      "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
+    route: "/work/thai-nari",
+    liveUrl: "https://thai-sooty.vercel.app/",
+    previewImage: "/projects/thai-nari/preview.svg",
+    alt: "Thai Nari website preview"
+  },
+  {
+    id: "pavel-portfolio",
+    title: "Pavel Portfolio",
+    year: "2026",
+    category: "Personal Portfolio",
+    type: "Personal Project",
+    role: "Art Direction, UI Design, Development, Motion System",
+    overview:
+      "A personal portfolio focused on editorial typography, project storytelling and a responsive motion system.",
+    description:
+      "A personal portfolio created as a complete identity, interface and motion system for an independent web designer and developer.",
+    route: "/work/pavel-portfolio",
+    liveUrl: "https://pavel-portfolio-six.vercel.app/",
+    previewImage: "/projects/pavel-portfolio/preview.svg",
+    alt: "Pavel Portfolio homepage preview"
+  }
+] as const;
+
+export type Project = (typeof projects)[number];
+
+export const projectById = Object.fromEntries(
+  projects.map((project) => [project.id, project])
+) as Record<Project["id"], Project>;
 
 export const legacyServices = [
   {
@@ -87,28 +114,4 @@ export const process = [
   ["Direction", "I create the visual concept, content hierarchy and core page structure."],
   ["Develop", "I build the responsive website, interactions, animations and required integrations."],
   ["Launch", "I test the final result, connect the domain and prepare the website for publication."]
-] as const;
-
-export const goals = [
-  {
-    title: "Present services",
-    description:
-      "Organize complex services, specialists, prices and frequently asked questions into a clear structure.",
-    structure: ["Overview", "Services", "Specialists", "FAQ", "Contact"],
-    cta: "Explore services"
-  },
-  {
-    title: "Show projects",
-    description:
-      "Turn completed work into a structured portfolio that communicates quality and builds trust.",
-    structure: ["Selected work", "Project details", "Process", "About", "Enquiry"],
-    cta: "View projects"
-  },
-  {
-    title: "Receive bookings",
-    description:
-      "Create a simple path from interest to a direct enquiry, consultation or booking request.",
-    structure: ["Offer", "Details", "Availability", "Reviews", "Booking"],
-    cta: "Book a consultation"
-  }
 ] as const;
