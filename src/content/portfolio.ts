@@ -1,16 +1,15 @@
 export const site = {
-  name: "PAVEL",
+  name: "Pavel Kostin",
   title: "Pavel - Web Designer & Developer in Tbilisi",
   description:
-    "Independent web designer and developer creating clear, visually strong websites for service businesses in Tbilisi and worldwide.",
-  availability: "Available for selected projects",
+    "Independent web designer and developer creating visually strong websites for modern businesses in Tbilisi and worldwide.",
+  availability: "Available for new projects",
   location: "Tbilisi / Worldwide"
 };
 
 export const navigation = [
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
-  { label: "Process", href: "#process" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" }
 ];
@@ -26,7 +25,36 @@ export const projectLinks = {
   thaiNari: "REPLACE_WITH_THAI_NARI_LIVE_URL"
 };
 
-export const services = [
+export const homepageServices = [
+  {
+    title: "Web Design",
+    copy: "Clear visual systems and interfaces shaped around the business and its audience."
+  },
+  {
+    title: "Development",
+    copy: "Responsive, animated and production-ready implementation."
+  },
+  {
+    title: "Launch & Integrations",
+    copy: "Forms, deployment, domains and lightweight business integrations."
+  }
+];
+
+export const project = {
+  slug: "thai-nari",
+  title: "Thai Nari",
+  category: "Thai SPA & Wellness",
+  service: "Web Design & Development",
+  status: "Concept Project / 2026",
+  intro:
+    "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
+  role: "Art Direction, UI Design, Development, Motion",
+  year: "2026",
+  type: "Concept Project",
+  route: "/work/thai-nari"
+};
+
+export const legacyServices = [
   {
     title: "Business websites",
     copy: "Official websites for businesses that need a clear, credible and professional digital presence."
