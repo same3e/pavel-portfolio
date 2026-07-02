@@ -71,7 +71,7 @@ export function Header() {
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           onClick={toggleTheme}
         >
-          <span aria-hidden="true">{theme === "dark" ? "L" : "D"}</span>
+          <span aria-hidden="true" />
         </button>
         <button
           ref={closeButtonRef}

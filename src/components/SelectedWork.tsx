@@ -68,6 +68,9 @@ export function SelectedWork() {
           <div className="work-media-shell">
             <ProjectPreviewMedia project={activeProject} />
           </div>
+          <p className="work-summary" key={`${activeProject.id}-summary`}>
+            {activeProject.description}
+          </p>
           <div className="work-info" key={activeProject.id}>
             <div className="work-info-row">
               <span>Year</span>
@@ -115,7 +118,7 @@ export function SelectedWork() {
             >
               <span>{project.year}</span>
               <strong>{project.title}</strong>
-              <small>{project.category}</small>
+              <small>{project.category} / {project.type}</small>
             </a>
           ))}
         </div>

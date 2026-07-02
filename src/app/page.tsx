@@ -23,13 +23,17 @@ export default function Home() {
             <span>{site.location}</span>
           </div>
           <h1 className="masked-title word-reveal" aria-label={hero.aria}>
-            {hero.lines.map((line) => (
+            {hero.lines.map((line, lineIndex) => (
               <span key={line}>
-                {line.split(" ").map((word, index) => (
-                  <i style={{ animationDelay: `${index * 52}ms` }} key={`${line}-${word}-${index}`}>
-                    {word}{index < line.split(" ").length - 1 ? "\u00A0" : ""}
-                  </i>
+                {line.split(" ").map((word, index, words) => (
+                  <span className="word-wrap" key={`${line}-${word}-${index}`}>
+                    <i className="word" style={{ animationDelay: `${index * 52 + lineIndex * 70}ms` }}>
+                      {word}
+                    </i>
+                    {index < words.length - 1 ? " " : ""}
+                  </span>
                 ))}
+                {lineIndex < hero.lines.length - 1 ? " " : ""}
               </span>
             ))}
           </h1>
@@ -98,7 +102,6 @@ export default function Home() {
             <p>Have a project or business that needs a stronger digital presence?</p>
             <a className="button contact-cta" href="mailto:kostinpavel447@gmail.com" data-label="Start a project">
               <span>Start a project</span>
-              <span aria-hidden="true">Start a project</span>
             </a>
           </div>
           <ContactLinks />

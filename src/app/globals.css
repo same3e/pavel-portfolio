@@ -51,6 +51,7 @@ body {
     var(--bg);
   color: var(--text);
   font-family: var(--font-sans), Arial, sans-serif;
+  transition: background-color 240ms ease, color 240ms ease;
 }
 
 a {
@@ -124,6 +125,10 @@ p {
   font-size: 0.74rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.section-label {
+  font-family: var(--font-pixel), var(--font-mono), monospace;
 }
 
 .brand {
@@ -230,17 +235,35 @@ p {
 }
 
 .theme-toggle {
+  position: relative;
   display: inline-grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  font-family: var(--font-pixel), monospace;
-  font-size: 0.78rem;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.theme-toggle span {
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+}
+
+[data-theme="dark"] .theme-toggle span {
+  background: linear-gradient(90deg, transparent 50%, currentColor 50%);
 }
 
 .mobile-menu {
@@ -257,19 +280,21 @@ p {
 
 .hero {
   min-height: calc(100svh - 66px);
-  padding: clamp(44px, 7vw, 96px) 0;
+  padding: clamp(42px, 6vw, 84px) 0 clamp(28px, 5vw, 72px);
 }
 
 .home-hero {
   position: relative;
   align-content: space-between;
+  overflow: hidden;
 }
 
 .hero-id {
   grid-column: 1 / 6;
   display: grid;
-  gap: 8px;
+  gap: 7px;
   align-self: start;
+  max-width: 560px;
   color: var(--muted);
   animation: softEnter 720ms ease 180ms both;
 }
@@ -285,28 +310,23 @@ p {
 }
 
 .masked-title {
-  grid-column: 1 / 12;
+  grid-column: 1 / 13;
   align-self: center;
   display: grid;
-  gap: 0.02em;
-  font-size: clamp(4.2rem, 9.8vw, 12.6rem);
-  font-family: var(--font-pixel), monospace;
-  font-weight: 650;
-  line-height: 0.84;
+  gap: 0;
+  max-width: min(1320px, 100%);
+  font-size: clamp(5rem, 10.9vw, 13rem);
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-weight: 760;
+  line-height: 0.78;
   letter-spacing: 0;
 }
 
-.masked-title span,
+.masked-title > span,
 .intro-word span,
 .reveal-heading span {
   display: block;
   overflow: hidden;
-}
-
-.word-reveal span {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 0.16em;
 }
 
 .masked-title i,
@@ -318,22 +338,33 @@ p {
 }
 
 .word-reveal i {
+  display: inline-block;
+  margin-right: 0.13em;
   opacity: 0;
   filter: blur(6px);
   transform: translateY(12px);
   animation: wordReveal 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.masked-title span:nth-child(2) i {
+.word-reveal i:last-child {
+  margin-right: 0;
+}
+
+.word-reveal .word-wrap {
+  display: inline;
+  overflow: visible;
+}
+
+.masked-title > span:nth-child(2) i {
   animation-delay: 90ms;
 }
 
-.masked-title span:nth-child(3) i {
+.masked-title > span:nth-child(3) i {
   animation-delay: 180ms;
 }
 
 .hero-meta {
-  grid-column: 1 / 5;
+  grid-column: 1 / 6;
   display: flex;
   gap: 20px;
   align-self: end;
@@ -407,7 +438,7 @@ p {
 }
 
 .selected-work {
-  min-height: 220svh;
+  min-height: 190svh;
   padding: clamp(56px, 8vw, 120px) 0;
   background: transparent;
   color: var(--text);
@@ -416,7 +447,7 @@ p {
 
 .selected-work-inner {
   display: grid;
-  grid-template-columns: minmax(520px, 0.78fr) minmax(360px, 0.52fr);
+  grid-template-columns: minmax(560px, 0.92fr) minmax(360px, 0.58fr);
   gap: clamp(34px, 5vw, 96px);
   width: min(var(--max), calc(100% - var(--gutter) * 2));
   margin: 0 auto;
@@ -431,7 +462,7 @@ p {
 
 .work-media-shell {
   overflow: hidden;
-  min-height: clamp(460px, 58vh, 720px);
+  min-height: clamp(520px, 64vh, 760px);
   border: 1px solid var(--line);
   background:
     linear-gradient(135deg, rgba(74, 85, 120, 0.12), transparent 42%),
@@ -454,6 +485,16 @@ p {
   transition: transform 720ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.work-summary {
+  margin-top: clamp(22px, 2.8vw, 42px);
+  max-width: 820px;
+  color: var(--text);
+  font-size: clamp(1.55rem, 2.45vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+  animation: workInfoEnter 420ms ease both;
+}
+
 .case-phone img {
   width: 100%;
   height: 100%;
@@ -468,7 +509,7 @@ p {
 }
 
 .work-info {
-  margin-top: clamp(18px, 2.2vw, 32px);
+  margin-top: clamp(22px, 2.4vw, 36px);
   animation: workInfoEnter 420ms ease both;
 }
 
@@ -535,8 +576,9 @@ p {
 
 .work-list-item strong {
   max-width: 760px;
-  font-size: clamp(4.8rem, 8.4vw, 11.5rem);
-  font-weight: 640;
+  font-size: clamp(4.8rem, 8vw, 10.8rem);
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-weight: 720;
   line-height: 0.84;
   letter-spacing: 0;
 }
@@ -604,7 +646,7 @@ p {
 h2 {
   margin-top: 18px;
   font-size: clamp(2.5rem, 6vw, 7.4rem);
-  font-family: var(--font-pixel), monospace;
+  font-family: var(--font-sans), Arial, sans-serif;
   font-weight: 600;
   line-height: 0.92;
   letter-spacing: 0;
@@ -704,7 +746,7 @@ h2 {
   inset: 10% var(--gutter) auto;
   z-index: -1;
   display: grid;
-  color: rgba(22, 22, 22, 0.06);
+  color: color-mix(in srgb, var(--text) 6%, transparent);
   font-size: clamp(4.4rem, 14vw, 18rem);
   font-weight: 800;
   line-height: 0.76;
@@ -829,9 +871,15 @@ h2 {
   transition: transform 280ms ease;
 }
 
-.button span + span {
+.button::after {
+  content: attr(data-label);
   position: absolute;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  white-space: nowrap;
   transform: translateY(120%);
+  transition: transform 280ms ease;
 }
 
 .button:hover span:first-child,
@@ -840,7 +888,9 @@ h2 {
 }
 
 .button:hover span + span,
-.button:focus-visible span + span {
+.button:focus-visible span + span,
+.button:hover::after,
+.button:focus-visible::after {
   transform: translateY(0);
 }
 
@@ -1476,6 +1526,7 @@ h2 {
 
   .masked-title {
     grid-column: 1 / 13;
+    font-size: clamp(4.6rem, 13vw, 9.4rem);
   }
 
   .hero-meta {
@@ -1568,7 +1619,8 @@ h2 {
   }
 
   .masked-title {
-    font-size: clamp(3.7rem, 17vw, 6rem);
+    font-size: clamp(4rem, 16vw, 5.7rem);
+    line-height: 0.82;
   }
 
   .hero-id {
@@ -1599,7 +1651,11 @@ h2 {
   }
 
   .work-list-item strong {
-    font-size: clamp(3.8rem, 18vw, 6.4rem);
+    font-size: clamp(3.4rem, 15vw, 5.8rem);
+  }
+
+  .work-summary {
+    font-size: clamp(1.55rem, 8vw, 2.5rem);
   }
 
   .work-list-item::after {

@@ -12,10 +12,10 @@ export const site = {
 };
 
 export const hero = {
-  lines: ["I design and build", "websites, CRM flows", "and automations", "for modern businesses."],
-  aria: "I design and build websites, CRM flows and automations for modern businesses.",
+  lines: ["I design", "websites, CRM", "and automations", "for business."],
+  aria: "I design websites, CRM and automations for business.",
   subtitle:
-    "Independent web designer and developer creating websites, booking bots, CRM interfaces and launch-ready digital systems."
+    "Independent web designer and developer creating sharp websites, booking bots, CRM flows and launch-ready digital systems."
 };
 
 export const navigation = [
