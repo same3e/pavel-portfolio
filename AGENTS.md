@@ -106,7 +106,7 @@ Use `next/font`.
 
 Required fonts:
 
-- `Jersey 15` for display typography;
+- `Pixelify Sans` for display typography;
 - `Inter Tight` for body and interface text;
 - `IBM Plex Mono` for metadata and technical labels.
 
@@ -120,7 +120,7 @@ Create and use CSS variables:
 --font-mono
 ```
 
-Use `Jersey 15` only for:
+Use `Pixelify Sans` only for:
 
 - hero title;
 - large section headings;
@@ -381,14 +381,13 @@ Prefilled message:
 Hello Pavel, I would like to discuss a website for my business.
 ```
 
-Hero actions:
+Hero action:
 
 - primary: `START A PROJECT` → WhatsApp;
-- secondary: `VIEW MY WORK` → `#work`.
 
 Contact section:
 
-- primary button → WhatsApp;
+- primary underlined CTA → WhatsApp;
 - preserve Email, Instagram, Telegram and WhatsApp in the contact list.
 
 Use the clean Instagram URL:
@@ -1018,7 +1017,7 @@ Run deeper checks only when:
 
 The task is complete only when all of the following are true:
 
-- Jersey 15 is loaded through `next/font/google`;
+- Pixelify Sans is loaded through `next/font/google`;
 - Inter Tight is used for body text;
 - IBM Plex Mono is used for metadata;
 - old fake pixel font stacks are removed;

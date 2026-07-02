@@ -25,11 +25,8 @@ export default function Home() {
           </div>
 
           <div className="hero-actions">
-            <a className="button primary" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+            <a className="text-cta hero-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <LetterSwapText label="START A PROJECT" />
-            </a>
-            <a className="button" href="#work">
-              <LetterSwapText label="VIEW MY WORK" />
             </a>
           </div>
         </section>
@@ -71,7 +68,7 @@ export default function Home() {
               <span>MEMORABLE</span>
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
-            <a className="button primary contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+            <a className="text-cta contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <LetterSwapText label="START A PROJECT" />
             </a>
           </div>

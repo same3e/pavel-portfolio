@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LetterSwapText } from "@/components/LetterSwapText";
 import { Footer, Header } from "@/components/SiteChrome";
 
 export default function NotFound() {
@@ -9,8 +10,8 @@ export default function NotFound() {
         <div>
           <p>404</p>
           <h1>Page not found</h1>
-          <Link className="button primary" href="/">
-            <span>Back home</span>
+          <Link className="text-cta" href="/">
+            <LetterSwapText label="Back home" />
           </Link>
         </div>
       </main>
@@ -18,4 +19,3 @@ export default function NotFound() {
     </>
   );
 }
-

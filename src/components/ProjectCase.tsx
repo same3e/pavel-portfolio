@@ -117,7 +117,7 @@ export function ProjectCase({ project }: { project: Project }) {
 
         <section className="case-cta section-grid">
           <h2>{project.title}</h2>
-          <a className="button primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+          <a className="text-cta case-live-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
             <LetterSwapText label="Visit live project" />
           </a>
           <a className="next-project-link" href={nextProject.route} onClick={openNext}>
@@ -134,7 +134,7 @@ export function ProjectCase({ project }: { project: Project }) {
               <span>MEMORABLE</span>
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
-            <a className="button primary contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+            <a className="text-cta contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <LetterSwapText label="START A PROJECT" />
             </a>
           </div>
