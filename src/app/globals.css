@@ -7,7 +7,6 @@
   --text: #161616;
   --muted: #68665f;
   --line: rgba(22, 22, 22, 0.18);
-  --header-bg: rgba(242, 240, 234, 0.76);
   --accent: #4a5578;
   --accent-contrast: #ffffff;
   --dark: #070707;
@@ -120,10 +119,6 @@ p {
   width: min(var(--max), calc(100% - var(--gutter) * 2));
   margin: 0 auto;
   padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-  background: var(--header-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 }
 
 .brand,
@@ -131,7 +126,7 @@ p {
 .availability,
 .hero-id,
 .footer,
-.service-row > span,
+.service-row>span,
 .case-meta span,
 .case-details span,
 .case-solution span,
@@ -156,7 +151,7 @@ p {
   white-space: nowrap;
 }
 
-.brand > span {
+.brand>span {
   font-size: 1.15em;
   line-height: 1;
 }
@@ -367,7 +362,7 @@ p {
   text-wrap: balance;
 }
 
-.masked-title > span,
+.masked-title>span,
 .split-line,
 .reveal-heading span {
   display: block;
@@ -589,7 +584,7 @@ p {
   border-top: 1px solid var(--line);
 }
 
-.compact-services > div:first-child {
+.compact-services>div:first-child {
   grid-column: 1 / 5;
 }
 
@@ -637,7 +632,7 @@ h2 {
 .service-row p,
 .minimal-about p,
 .contact p,
-.case-hero > p,
+.case-hero>p,
 .case-details p,
 .case-solution p,
 .case-cta p {
@@ -651,7 +646,7 @@ h2 {
     width: 100%;
   }
 
-  .service-row:hover > span {
+  .service-row:hover>span {
     color: var(--accent);
   }
 
@@ -713,7 +708,7 @@ h2 {
   color: var(--accent-contrast);
 }
 
-.contact > div:first-child {
+.contact>div:first-child {
   grid-column: 1 / 8;
 }
 
@@ -861,7 +856,7 @@ h2 {
   font-size: clamp(4.2rem, 10.8vw, 14rem);
 }
 
-.case-hero > p {
+.case-hero>p {
   grid-column: 7 / 13;
   max-width: 680px;
   color: var(--text);
@@ -962,7 +957,7 @@ h2 {
   grid-column: 1 / 7;
 }
 
-.case-cta > .case-live-link {
+.case-cta>.case-live-link {
   grid-column: 7 / 10;
 }
 
@@ -988,7 +983,7 @@ h2 {
   padding: clamp(72px, 10vw, 140px) 0;
 }
 
-.not-found > div {
+.not-found>div {
   grid-column: 1 / 9;
 }
 
@@ -1009,12 +1004,14 @@ h2 {
   from {
     transform: translateY(105%);
   }
+
   to {
     transform: translateY(0);
   }
 }
 
 @keyframes routeName {
+
   30%,
   70% {
     opacity: 1;
@@ -1026,6 +1023,7 @@ h2 {
     opacity: 0;
     clip-path: inset(8% 0 0 0);
   }
+
   to {
     opacity: 1;
     clip-path: inset(0);
@@ -1051,21 +1049,21 @@ h2 {
   .hero-id,
   .hero-subtitle,
   .hero-actions,
-  .compact-services > div:first-child,
+  .compact-services>div:first-child,
   .service-list,
   .minimal-about p,
   .about-statement,
   .about-meta-list,
-  .contact > div:first-child,
+  .contact>div:first-child,
   .contact-list,
-  .case-hero > p,
+  .case-hero>p,
   .case-meta,
   .case-desktop,
   .case-phone,
   .case-cta h2,
-  .case-cta > .case-live-link,
+  .case-cta>.case-live-link,
   .next-project-link,
-  .not-found > div {
+  .not-found>div {
     grid-column: 1 / 13;
   }
 
@@ -1250,6 +1248,7 @@ h2 {
 
 /* reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
