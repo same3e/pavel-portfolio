@@ -179,7 +179,8 @@ p {
 .work-case-link:hover,
 .text-cta:hover,
 .next-project-link:hover {
-  color: var(--accent);
+  color: inherit;
+  opacity: 0.7;
 }
 
 .availability {
@@ -646,7 +647,8 @@ h2 {
   }
 
   .service-row:hover>span {
-    color: var(--accent);
+    color: inherit;
+    opacity: 0.7;
   }
 
   .service-row:hover h3 {
