@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { LetterSwapText } from "@/components/LetterSwapText";
 import { contact, navigation, site } from "@/content/portfolio";
 
 export function Header() {
@@ -87,12 +88,12 @@ export function Header() {
     <>
       <header className="site-header">
         <Link className="brand" href="/" aria-label="Pavel portfolio home">
-          PAVEL <span aria-hidden="true">{"\u00B7"}</span> DEVELOP
+          <LetterSwapText label="PAVEL · DEVELOP" />
         </Link>
         <nav className="desktop-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
             <Link href={`/${item.href}`} key={item.href}>
-              {item.label}
+              <LetterSwapText label={item.label} />
             </Link>
           ))}
         </nav>
@@ -117,19 +118,19 @@ export function Header() {
           aria-controls="mobile-menu"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          <span>{menuOpen ? "Close" : "Menu"}</span>
+          <LetterSwapText label={menuOpen ? "Close" : "Menu"} />
         </button>
       </header>
 
       {menuOpen && (
         <div className="mobile-menu is-open" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
           <button ref={closeButtonRef} className="mobile-menu-close" type="button" onClick={closeMenu}>
-            Close
+            <LetterSwapText label="Close" />
           </button>
           <nav aria-label="Mobile navigation">
             {navigation.map((item) => (
               <Link href={`/${item.href}`} key={item.href} onClick={closeMenu}>
-                {item.label}
+                <LetterSwapText label={item.label} />
               </Link>
             ))}
           </nav>
@@ -137,7 +138,7 @@ export function Header() {
             <p>{site.location}</p>
             <p>{site.availability}</p>
             <button type="button" onClick={toggleTheme}>
-              {theme === "dark" ? "Light mode" : "Dark mode"}
+              <LetterSwapText label={theme === "dark" ? "Light mode" : "Dark mode"} />
             </button>
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
@@ -155,7 +156,11 @@ export function Footer({ showBackHome = false }: { showBackHome?: boolean }) {
       <p>Pavel Kostin - Independent Web Designer & Developer</p>
       <p>{site.location}</p>
       <p>Portfolio design and development by Pavel - {year}</p>
-      {showBackHome ? <Link href="/">Back home</Link> : null}
+      {showBackHome ? (
+        <Link href="/">
+          <LetterSwapText label="Back home" />
+        </Link>
+      ) : null}
     </footer>
   );
 }
@@ -175,7 +180,7 @@ export function ContactLink({ label, href }: { label: string; href: string }) {
       rel={isExternal ? "noopener noreferrer" : undefined}
     >
       <span>{label}</span>
-      <span>Open</span>
+      <LetterSwapText label="Open" />
     </a>
   );
 }

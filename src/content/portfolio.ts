@@ -115,9 +115,10 @@ export const projects = [
   }
 ] satisfies readonly Project[];
 
-export const projectById = Object.fromEntries(
-  projects.map((project) => [project.id, project])
-) as Record<Project["id"], Project>;
+export const projectById = projects.reduce<Record<Project["id"], Project>>((accumulator, project) => {
+  accumulator[project.id] = project;
+  return accumulator;
+}, {} as Record<Project["id"], Project>);
 
 export const legacyServices = [
   {

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { LetterSwapText } from "@/components/LetterSwapText";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { useMotionShell } from "@/components/MotionShell";
 import { contact, Project, projects } from "@/content/portfolio";
@@ -43,7 +44,7 @@ export function ProjectCase({ project }: { project: Project }) {
             <MetaItem label="Year" value={project.year} />
             <MetaItem label="Type" value={project.type} />
             <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-              Live website {"\u2197"}
+              <LetterSwapText label="Live website ↗" />
             </a>
           </div>
         </section>
@@ -117,10 +118,10 @@ export function ProjectCase({ project }: { project: Project }) {
         <section className="case-cta section-grid">
           <h2>{project.title}</h2>
           <a className="button primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-            <span>Visit live project</span>
+            <LetterSwapText label="Visit live project" />
           </a>
           <a className="next-project-link" href={nextProject.route} onClick={openNext}>
-            Next project<br />
+            <LetterSwapText label="Next project" /><br />
             <span>{nextProject.title}</span>
           </a>
         </section>
@@ -134,7 +135,7 @@ export function ProjectCase({ project }: { project: Project }) {
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
             <a className="button primary contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
-              <span>START A PROJECT</span>
+              <LetterSwapText label="START A PROJECT" />
             </a>
           </div>
           <ContactLinks />

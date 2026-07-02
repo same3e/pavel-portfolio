@@ -155,7 +155,7 @@ p {
   white-space: nowrap;
 }
 
-.brand span {
+.brand > span {
   font-size: 1.15em;
   line-height: 1;
 }
@@ -357,7 +357,7 @@ p {
   max-width: min(1260px, 100%);
   padding-bottom: 0.06em;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(5rem, 9.2vw, 12.2rem);
+  font-size: clamp(4.3rem, 7.8vw, 10.4rem);
   font-weight: 700;
   line-height: 0.91;
   letter-spacing: 0;
@@ -365,6 +365,7 @@ p {
 }
 
 .masked-title > span,
+.split-line,
 .reveal-heading span {
   display: block;
   overflow: hidden;
@@ -378,21 +379,8 @@ p {
   animation: maskUp 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.word-reveal i {
+.split-word {
   display: inline-block;
-  margin-right: 0.13em;
-  opacity: 0;
-  filter: blur(6px);
-  transform: translateY(12px);
-  animation: wordReveal 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-.word-reveal i:last-child {
-  margin-right: 0;
-}
-
-.word-reveal .word-wrap {
-  display: inline;
 }
 
 .hero-subtitle {
@@ -799,6 +787,36 @@ h2 {
   overflow-wrap: anywhere;
 }
 
+/* letter swap */
+.letter-swap {
+  display: inline-grid;
+  line-height: 1.16;
+  white-space: nowrap;
+}
+
+.letter-swap-visual {
+  position: relative;
+  display: inline-block;
+  grid-area: 1 / 1;
+  height: 1.16em;
+  overflow: hidden;
+}
+
+.letter-swap-row {
+  display: flex;
+  line-height: 1.16;
+}
+
+.letter-swap-row-next {
+  position: absolute;
+  inset: 0;
+}
+
+.letter-swap-char {
+  display: inline-block;
+  will-change: transform;
+}
+
 /* project case */
 .route-transition {
   position: fixed;
@@ -992,14 +1010,6 @@ h2 {
     transform: translateY(105%);
   }
   to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes wordReveal {
-  to {
-    opacity: 1;
-    filter: blur(0);
     transform: translateY(0);
   }
 }

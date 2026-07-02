@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter_Tight, Pixelify_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Inter_Tight, Jersey_15 } from "next/font/google";
 import { MotionShell } from "@/components/MotionShell";
 import { site } from "@/content/portfolio";
 import "./globals.css";
 
-const pixelifySans = Pixelify_Sans({
+const jersey15 = Jersey_15({
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-display",
   display: "swap"
 });
@@ -97,7 +98,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${pixelifySans.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
+      <body className={`${jersey15.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>

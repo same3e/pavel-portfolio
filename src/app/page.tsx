@@ -1,5 +1,7 @@
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
+import { LetterSwapText } from "@/components/LetterSwapText";
 import { SelectedWork } from "@/components/SelectedWork";
+import { SplitRevealText } from "@/components/SplitRevealText";
 import { aboutCopy, contact, hero, homepageServices, site } from "@/content/portfolio";
 
 export default function Home() {
@@ -16,21 +18,7 @@ export default function Home() {
             <span>{site.location}</span>
           </div>
 
-          <h1 className="masked-title word-reveal" aria-label={hero.aria}>
-            {hero.lines.map((line, lineIndex) => (
-              <span key={line}>
-                {line.split(" ").map((word, index, words) => (
-                  <span className="word-wrap" key={`${line}-${word}-${index}`}>
-                    <i className="word" style={{ animationDelay: `${index * 52 + lineIndex * 70}ms` }}>
-                      {word}
-                    </i>
-                    {index < words.length - 1 ? " " : ""}
-                  </span>
-                ))}
-                {lineIndex < hero.lines.length - 1 ? " " : ""}
-              </span>
-            ))}
-          </h1>
+          <SplitRevealText as="h1" className="masked-title" ariaLabel={hero.aria} lines={hero.lines} mode="load" />
 
           <div className="hero-subtitle">
             <p>{hero.subtitle}</p>
@@ -38,10 +26,10 @@ export default function Home() {
 
           <div className="hero-actions">
             <a className="button primary" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
-              <span>START A PROJECT</span>
+              <LetterSwapText label="START A PROJECT" />
             </a>
             <a className="button" href="#work">
-              <span>VIEW MY WORK</span>
+              <LetterSwapText label="VIEW MY WORK" />
             </a>
           </div>
         </section>
@@ -66,16 +54,7 @@ export default function Home() {
         </section>
 
         <section className="about minimal-about section-grid" id="about">
-          <p className="about-statement word-reveal" aria-label={aboutCopy}>
-            {aboutCopy.split(" ").map((word, index) => (
-              <span className="word-wrap" key={`${word}-${index}`}>
-                <i className="word" style={{ animationDelay: `${index * 42}ms` }}>
-                  {word}
-                </i>
-                {index < aboutCopy.split(" ").length - 1 ? " " : ""}
-              </span>
-            ))}
-          </p>
+          <SplitRevealText as="p" className="about-statement" ariaLabel={aboutCopy} text={aboutCopy} mode="scroll" />
           <div className="about-meta-list">
             <span>Based in Tbilisi</span>
             <span>Working worldwide</span>
@@ -93,7 +72,7 @@ export default function Home() {
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
             <a className="button primary contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
-              <span>START A PROJECT</span>
+              <LetterSwapText label="START A PROJECT" />
             </a>
           </div>
           <ContactLinks />

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { LetterSwapText } from "@/components/LetterSwapText";
 import { useMotionShell } from "@/components/MotionShell";
 import { Project, projects } from "@/content/portfolio";
 
@@ -97,7 +98,7 @@ export function SelectedWork() {
               href={activeProject.route}
               onClick={(event) => handleProjectClick(event, activeProject)}
             >
-              Explore the case
+              <LetterSwapText label="Explore the case" />
             </a>
           </div>
         </aside>

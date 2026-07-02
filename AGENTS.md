@@ -77,69 +77,18 @@ If a requirement is impossible because a real asset is missing, implement the co
 
 # 3. Required workflow
 
-## Before editing
+Do not run a large verification matrix by default.
 
-Run:
+Work in this order:
 
-```bash
-npm install
-npm run lint
-npm run build
-```
+1. inspect the files directly related to the requested change;
+2. implement the visible/product requirement first;
+3. remove dead code created by the change;
+4. run exactly the three required checks from section 22 unless the user asks for deeper QA.
 
-Record the initial result.
+Do not create or maintain a large checklist unless explicitly requested.
 
-Create:
-
-```text
-docs/refactor-checklist.md
-```
-
-The checklist must contain every major section from this file.
-
-Each checklist item must use one of these statuses:
-
-- `[ ] NOT STARTED`
-- `[-] IN PROGRESS`
-- `[x] VERIFIED`
-- `[!] BLOCKED BY ASSET`
-
-Do not mark an item verified based only on code inspection.
-
-## During implementation
-
-Work sequentially.
-
-After each major section:
-
-1. update `docs/refactor-checklist.md`;
-2. reopen the modified files;
-3. inspect the final code;
-4. run relevant checks;
-5. remove dead code created by the change.
-
-## Before finishing
-
-Run:
-
-```bash
-git diff --check
-npm run lint
-npm run build
-```
-
-Then run:
-
-```bash
-rg "introProgress|introVisible|introResolved|activeService" src
-rg "MS Serif|Arial Narrow|Cascadia Mono|font-smooth" src
-rg '"latest"' package.json
-rg "data-label" src
-```
-
-Unexpected matches are not allowed.
-
-Inspect the complete diff before reporting completion.
+Before reporting completion, inspect the changed files and summarize the diff.
 
 ---
 
@@ -157,7 +106,7 @@ Use `next/font`.
 
 Required fonts:
 
-- `Pixelify Sans` for display typography;
+- `Jersey 15` for display typography;
 - `Inter Tight` for body and interface text;
 - `IBM Plex Mono` for metadata and technical labels.
 
@@ -171,7 +120,7 @@ Create and use CSS variables:
 --font-mono
 ```
 
-Use `Pixelify Sans` only for:
+Use `Jersey 15` only for:
 
 - hero title;
 - large section headings;
@@ -1029,49 +978,39 @@ Verify:
 
 # 22. Required verification
 
-Run all of the following:
+Run only these three checks by default:
+
+## Technical check
 
 ```bash
-git diff --check
-npm run lint
 npm run build
 ```
 
-Also verify manually or with browser tooling at:
+This is the source of truth for TypeScript, Next.js production compilation and deploy safety.
 
-```text
-320px
-375px
-390px
-768px
-1024px
-1440px
-1920px
+## General check
+
+```bash
+npm run lint
 ```
 
-Verify both themes.
+This covers the broad code-quality pass.
 
-Verify:
+## Visual check
 
-- Tab;
-- Shift+Tab;
-- Enter;
-- Space for buttons;
-- Escape;
-- focus restoration;
-- first-tap behavior on touch;
-- rapid hover in/out;
-- rapid repeated clicks;
-- Ctrl/Cmd-click;
-- Shift-click;
-- middle-click;
-- all internal routes;
-- all contact URLs;
-- not-found page;
-- sitemap;
-- robots;
-- favicon;
-- OG image.
+Use browser tooling once on the changed experience:
+
+- desktop: 1440px;
+- mobile: 390px;
+- both only if the change touches responsive layout or theme behavior.
+
+Capture screenshots for the final response when visual work changed.
+
+Run deeper checks only when:
+
+- the user asks for them;
+- the change touches navigation, accessibility, metadata or deployment;
+- one of the three checks fails.
 
 ---
 
@@ -1079,7 +1018,7 @@ Verify:
 
 The task is complete only when all of the following are true:
 
-- Pixelify Sans is loaded through `next/font/google`;
+- Jersey 15 is loaded through `next/font/google`;
 - Inter Tight is used for body text;
 - IBM Plex Mono is used for metadata;
 - old fake pixel font stacks are removed;
@@ -1122,41 +1061,22 @@ The task is complete only when all of the following are true:
 
 # 24. Final report format
 
-The final response must include this table:
+Keep the final response short.
 
-| Requirement | Status | Files | Verification |
-|---|---|---|---|
+Include:
 
-Allowed statuses:
-
-- `VERIFIED`
-- `BLOCKED BY ASSET`
-- `NOT COMPLETED`
-
-Then include:
-
-1. changed files;
-2. removed code;
-3. bugs fixed;
-4. font implementation;
-5. GSAP letter-swap implementation;
-6. mobile menu implementation;
-7. route-transition implementation;
-8. SEO files added;
-9. dependencies added or removed;
-10. asset TODOs;
-11. `git diff --check` result;
-12. lint result;
-13. build result;
-14. responsive checks performed;
-15. keyboard checks performed;
-16. remaining limitations.
+1. what changed;
+2. files touched;
+3. technical check result;
+4. general check result;
+5. visual check result;
+6. remaining blockers, if any.
 
 Do not use vague claims such as:
 
-- “should work”;
-- “mostly complete”;
-- “appears correct”;
-- “probably fixed”.
+- "should work";
+- "mostly complete";
+- "appears correct";
+- "probably fixed".
 
-Do not report completion while any non-asset requirement remains `NOT COMPLETED`.
+Do not report completion while build or lint fails.
