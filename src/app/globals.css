@@ -478,6 +478,7 @@ p {
   grid-template-columns: minmax(120px, 0.36fr) 1fr;
   gap: clamp(18px, 2vw, 34px);
   padding: clamp(13px, 1.4vw, 18px) 0;
+  border-top: 1px solid var(--line);
 }
 
 .work-info-row span,
@@ -580,7 +581,6 @@ p {
 .case-solution,
 .case-cta {
   padding: clamp(72px, 11vw, 160px) 0;
-  border-top: 1px solid var(--line);
 }
 
 .compact-services>div:first-child {
