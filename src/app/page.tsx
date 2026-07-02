@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { SelectedWork } from "@/components/SelectedWork";
-import { homepageServices, site } from "@/content/portfolio";
+import { aboutCopy, hero, homepageServices, site } from "@/content/portfolio";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
@@ -19,13 +19,19 @@ export default function Home() {
         <section className="hero home-hero section-grid">
           <div className="hero-id">
             <p><span>Pavel Kostin</span></p>
-            <span>Independent web designer & developer</span>
+            <span>{hero.subtitle}</span>
             <span>{site.location}</span>
           </div>
-          <h1 className="masked-title" aria-label="I design and build digital experiences for modern businesses.">
-            <span><i>I design and build</i></span>
-            <span><i>digital experiences</i></span>
-            <span><i>for modern businesses.</i></span>
+          <h1 className="masked-title word-reveal" aria-label={hero.aria}>
+            {hero.lines.map((line) => (
+              <span key={line}>
+                {line.split(" ").map((word, index) => (
+                  <i style={{ animationDelay: `${index * 52}ms` }} key={`${line}-${word}-${index}`}>
+                    {word}{index < line.split(" ").length - 1 ? "\u00A0" : ""}
+                  </i>
+                ))}
+              </span>
+            ))}
           </h1>
           <div className="hero-meta">
             <a href="#contact">{site.availability}</a>
@@ -72,7 +78,7 @@ export default function Home() {
           </div>
           <SectionLabel>03 / About</SectionLabel>
           <p>
-            Independent web designer and developer based in Tbilisi, creating visually strong websites from first direction to final launch.
+            {aboutCopy}
           </p>
           <div className="about-meta-list">
             <span>Based in Tbilisi</span>
@@ -90,7 +96,10 @@ export default function Home() {
               <span>MEMORABLE.</span>
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
-            <a className="button contact-cta" href="mailto:kostinpavel447@gmail.com">Start a project</a>
+            <a className="button contact-cta" href="mailto:kostinpavel447@gmail.com" data-label="Start a project">
+              <span>Start a project</span>
+              <span aria-hidden="true">Start a project</span>
+            </a>
           </div>
           <ContactLinks />
         </section>

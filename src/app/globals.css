@@ -1,9 +1,11 @@
 :root {
+  --bg: #f2f0ea;
   --background: #f2f0ea;
   --surface: #e7e4dc;
   --text: #161616;
   --muted: #6e6c66;
   --line: rgba(22, 22, 22, 0.18);
+  --grid-line: rgba(22, 22, 22, 0.055);
   --accent: #4a5578;
   --accent-dark: #313a59;
   --dark: #070707;
@@ -15,6 +17,22 @@
   --font-sans: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "Cascadia Mono", "IBM Plex Mono", Consolas, monospace;
   --font-pixel: "Cascadia Mono", "Lucida Console", "Courier New", monospace;
+}
+
+[data-theme="dark"] {
+  --bg: #11110f;
+  --background: #11110f;
+  --surface: #1b1b18;
+  --text: #f2f0ea;
+  --muted: #aaa69b;
+  --line: rgba(242, 240, 234, 0.2);
+  --grid-line: rgba(242, 240, 234, 0.06);
+  --accent: #7b87a8;
+  --accent-dark: #a8b2cf;
+  --dark: #070707;
+  --dark-line: rgba(242, 240, 234, 0.22);
+  --dark-muted: rgba(242, 240, 234, 0.58);
+  --thai: #d6c0a6;
 }
 
 * {
@@ -29,8 +47,8 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    linear-gradient(90deg, rgba(22, 22, 22, 0.055) 1px, transparent 1px) 50% 0 / calc((100vw - var(--gutter) * 2) / 12) 100%,
-    var(--background);
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 50% 0 / calc((100vw - var(--gutter) * 2) / 12) 100%,
+    var(--bg);
   color: var(--text);
   font-family: var(--font-sans), Arial, sans-serif;
 }
@@ -74,7 +92,7 @@ p {
   top: 0;
   z-index: 40;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
   gap: 28px;
   width: min(var(--max), calc(100% - var(--gutter) * 2));
@@ -123,8 +141,61 @@ p {
 .footer a,
 .hero-meta a,
 .case-meta a,
-.work-case-link {
+.work-case-link,
+.next-project-link {
+  position: relative;
   transition: color 180ms ease, transform 180ms ease;
+}
+
+.desktop-nav a::before,
+.desktop-nav a::after,
+.footer a::before,
+.footer a::after,
+.hero-meta a::before,
+.hero-meta a::after,
+.case-meta a::before,
+.case-meta a::after,
+.work-case-link::before,
+.next-project-link::before,
+.next-project-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 260ms ease;
+}
+
+.desktop-nav a::after,
+.footer a::after,
+.hero-meta a::after,
+.case-meta a::after,
+.next-project-link::after {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.desktop-nav a:hover::after,
+.footer a:hover::after,
+.hero-meta a:hover::after,
+.case-meta a:hover::after,
+.next-project-link:hover::after,
+.desktop-nav a:focus-visible::after,
+.footer a:focus-visible::after,
+.hero-meta a:focus-visible::after,
+.case-meta a:focus-visible::after,
+.next-project-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.work-case-link:hover::before,
+.work-case-link:focus-visible::before {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .desktop-nav a:hover,
@@ -156,6 +227,20 @@ p {
   background: transparent;
   padding: 10px 14px;
   cursor: pointer;
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.78rem;
 }
 
 .mobile-menu {
@@ -205,6 +290,7 @@ p {
   display: grid;
   gap: 0.02em;
   font-size: clamp(4.2rem, 9.8vw, 12.6rem);
+  font-family: var(--font-pixel), monospace;
   font-weight: 650;
   line-height: 0.84;
   letter-spacing: 0;
@@ -217,12 +303,25 @@ p {
   overflow: hidden;
 }
 
+.word-reveal span {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.16em;
+}
+
 .masked-title i,
 .intro-word i,
 .reveal-heading span {
   display: block;
   font-style: normal;
   animation: maskUp 780ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.word-reveal i {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(12px);
+  animation: wordReveal 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .masked-title span:nth-child(2) i {
@@ -298,7 +397,7 @@ p {
 }
 
 .pk-mark b:first-child {
-  color: rgba(22, 22, 22, 0.14);
+  color: color-mix(in srgb, var(--text) 14%, transparent);
 }
 
 .pk-mark b:last-child {
@@ -505,6 +604,7 @@ p {
 h2 {
   margin-top: 18px;
   font-size: clamp(2.5rem, 6vw, 7.4rem);
+  font-family: var(--font-pixel), monospace;
   font-weight: 600;
   line-height: 0.92;
   letter-spacing: 0;
@@ -562,8 +662,8 @@ h2 {
 .service-row i {
   color: var(--accent);
   font-style: normal;
-  opacity: 0;
-  transform: translate(-10px, 10px);
+  opacity: 0.55;
+  transform: translate(0);
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -589,7 +689,7 @@ h2 {
 .service-row:hover i,
 .service-row:focus-visible i {
   opacity: 1;
-  transform: translate(0);
+  transform: translate(5px, -5px);
 }
 
 .minimal-about {
@@ -601,11 +701,11 @@ h2 {
 
 .about-background {
   position: absolute;
-  inset: 8% var(--gutter) auto;
+  inset: 10% var(--gutter) auto;
   z-index: -1;
   display: grid;
   color: rgba(22, 22, 22, 0.06);
-  font-size: clamp(5rem, 17vw, 22rem);
+  font-size: clamp(4.4rem, 14vw, 18rem);
   font-weight: 800;
   line-height: 0.76;
   pointer-events: none;
@@ -719,6 +819,29 @@ h2 {
   padding: 14px 20px;
   border: 1px solid currentColor;
   font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.button span {
+  display: block;
+  transition: transform 280ms ease;
+}
+
+.button span + span {
+  position: absolute;
+  transform: translateY(120%);
+}
+
+.button:hover span:first-child,
+.button:focus-visible span:first-child {
+  transform: translateY(-150%);
+}
+
+.button:hover span + span,
+.button:focus-visible span + span {
+  transform: translateY(0);
 }
 
 .button.primary {
@@ -1072,6 +1195,14 @@ h2 {
   }
 }
 
+@keyframes wordReveal {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
 @keyframes loaderExit {
   to {
     opacity: 0;
@@ -1227,7 +1358,7 @@ h2 {
 
 @media (max-width: 1024px) {
   .site-header {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
   }
 
   .desktop-nav,
@@ -1298,7 +1429,7 @@ h2 {
 
   .mobile-menu-mark span:last-child {
     margin-left: -0.12em;
-    color: rgba(49, 85, 255, 0.46);
+    color: color-mix(in srgb, var(--accent) 46%, transparent);
   }
 
   .mobile-menu-meta {
@@ -1308,6 +1439,17 @@ h2 {
     color: rgba(242, 240, 234, 0.7);
     font-family: var(--font-mono), monospace;
     font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-meta button {
+    justify-self: start;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: var(--font-mono), monospace;
     text-transform: uppercase;
   }
 

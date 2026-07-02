@@ -4,11 +4,18 @@ export const site = {
   monogram: "PK",
   title: "Pavel Kostin - Web Designer & Developer in Tbilisi",
   description:
-    "Independent web designer and developer creating visually strong websites for modern businesses in Tbilisi and worldwide.",
+    "Independent web designer and developer creating websites, CRM flows, booking bots and lightweight automations for businesses in Tbilisi and worldwide.",
   availability: "Available for new projects",
   location: "Tbilisi / Worldwide",
   productionUrl: "https://pavel-portfolio-six.vercel.app/",
   repositoryUrl: "https://github.com/same3e/pavel-portfolio"
+};
+
+export const hero = {
+  lines: ["I design and build", "websites, CRM flows", "and automations", "for modern businesses."],
+  aria: "I design and build websites, CRM flows and automations for modern businesses.",
+  subtitle:
+    "Independent web designer and developer creating websites, booking bots, CRM interfaces and launch-ready digital systems."
 };
 
 export const navigation = [
@@ -37,8 +44,15 @@ export const homepageServices = [
   {
     title: "Launch & Integrations",
     copy: "Forms, deployment, domains and lightweight business integrations."
+  },
+  {
+    title: "Automation & CRM",
+    copy: "Booking bots, CRM workflows, dashboards and simple automations that remove repetitive business tasks."
   }
 ];
+
+export const aboutCopy =
+  "Independent web designer and developer based in Tbilisi, creating visual websites and broader digital products: CRM flows, booking bots, dashboards and automation systems.";
 
 export const projects = [
   {

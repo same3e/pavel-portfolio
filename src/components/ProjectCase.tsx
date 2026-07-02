@@ -107,7 +107,8 @@ export function ProjectCase({ project }: { project: Project }) {
         <section className="case-cta section-grid">
           <h2>{project.title}</h2>
           <a className="button primary" href={project.liveUrl}>
-            Visit live project
+            <span>Visit live project</span>
+            <span aria-hidden="true">Visit live project</span>
           </a>
           <a className="next-project-link" href={nextProject.route} onClick={openNext}>
             Next project<br />

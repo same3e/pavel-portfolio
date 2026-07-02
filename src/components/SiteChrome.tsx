@@ -6,7 +6,21 @@ import { contact, navigation, site } from "@/content/portfolio";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem("theme");
+    const initialTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+
+    setTheme(initialTheme);
+    document.documentElement.dataset.theme = initialTheme;
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -27,6 +41,13 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  function toggleTheme() {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    window.localStorage.setItem("theme", nextTheme);
+  }
+
   return (
     <>
       <header className="site-header">
@@ -44,6 +65,14 @@ export function Header() {
           <span aria-hidden="true" />
           {site.availability}
         </div>
+        <button
+          className="theme-toggle"
+          type="button"
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          onClick={toggleTheme}
+        >
+          <span aria-hidden="true">{theme === "dark" ? "L" : "D"}</span>
+        </button>
         <button
           ref={closeButtonRef}
           className="menu-toggle"
@@ -71,6 +100,9 @@ export function Header() {
         <div className="mobile-menu-meta">
           <p>{site.location}</p>
           <p>{site.availability}</p>
+          <button type="button" onClick={toggleTheme}>
+            {theme === "dark" ? "Light theme" : "Dark theme"}
+          </button>
           <a href={`mailto:${contact.email}`}>{contact.email}</a>
         </div>
       </div>
