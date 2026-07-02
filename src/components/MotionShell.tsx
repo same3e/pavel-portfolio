@@ -109,13 +109,6 @@ export function MotionShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <p>DESIGN & DEVELOPMENT<br />TBILISI / WORLDWIDE</p>
-          <div className="intro-line">
-            <span />
-          </div>
-          <div className="intro-pk" aria-hidden="true">
-            <span>P</span>
-            <span>K</span>
-          </div>
         </div>
       )}
 

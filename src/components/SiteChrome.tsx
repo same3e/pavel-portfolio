@@ -52,7 +52,7 @@ export function Header() {
     <>
       <header className="site-header">
         <Link className="brand" href="/" aria-label="Pavel portfolio home">
-          PAVEL
+          PAVEL <span aria-hidden="true">{"\u00B7"}</span> DEVELOP
         </Link>
         <nav className="desktop-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
@@ -71,7 +71,8 @@ export function Header() {
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           onClick={toggleTheme}
         >
-          <span aria-hidden="true" />
+          <span className="theme-icon theme-icon-sun" aria-hidden="true" />
+          <span className="theme-icon theme-icon-moon" aria-hidden="true" />
         </button>
         <button
           ref={closeButtonRef}
@@ -86,10 +87,6 @@ export function Header() {
       </header>
 
       <div className={`mobile-menu ${menuOpen ? "is-open" : ""}`} id="mobile-menu" aria-hidden={!menuOpen}>
-        <div className="mobile-menu-mark" aria-hidden="true">
-          <span>P</span>
-          <span>K</span>
-        </div>
         <nav aria-label="Mobile navigation">
           {navigation.map((item) => (
             <Link href={`/${item.href}`} key={item.href} onClick={() => setMenuOpen(false)}>
@@ -101,7 +98,7 @@ export function Header() {
           <p>{site.location}</p>
           <p>{site.availability}</p>
           <button type="button" onClick={toggleTheme}>
-            {theme === "dark" ? "Light theme" : "Dark theme"}
+            {theme === "dark" ? "Light mode" : "Dark mode"}
           </button>
           <a href={`mailto:${contact.email}`}>{contact.email}</a>
         </div>
@@ -118,7 +115,6 @@ export function Footer() {
       <p>Pavel Kostin - Independent Web Designer & Developer</p>
       <p>{site.location}</p>
       <p>Portfolio design and development by Pavel - {year}</p>
-      <p className="footer-pk" aria-hidden="true">PK</p>
       <Link href="/">Back home</Link>
     </footer>
   );

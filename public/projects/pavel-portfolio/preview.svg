@@ -1,21 +1,8 @@
 <svg width="1600" height="1050" viewBox="0 0 1600 1050" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="1600" height="1050" fill="#F2F0EA"/>
-  <g opacity=".45">
-    <line x1="140" y1="0" x2="140" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="320" y1="0" x2="320" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="500" y1="0" x2="500" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="680" y1="0" x2="680" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="860" y1="0" x2="860" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="1040" y1="0" x2="1040" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="1220" y1="0" x2="1220" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-    <line x1="1400" y1="0" x2="1400" y2="1050" stroke="#161616" stroke-opacity=".14"/>
-  </g>
   <text x="92" y="120" fill="#161616" font-family="Arial, sans-serif" font-size="28" font-weight="700">PAVEL</text>
   <text x="92" y="340" fill="#161616" font-family="Arial, sans-serif" font-size="118" font-weight="800">I design and build</text>
   <text x="92" y="470" fill="#161616" font-family="Arial, sans-serif" font-size="118" font-weight="800">digital experiences</text>
   <text x="92" y="600" fill="#161616" font-family="Arial, sans-serif" font-size="118" font-weight="800">for modern</text>
   <text x="92" y="730" fill="#161616" font-family="Arial, sans-serif" font-size="118" font-weight="800">businesses.</text>
-  <line x1="940" y1="778" x2="1458" y2="778" stroke="#161616" stroke-opacity=".24"/>
-  <circle cx="1184" cy="778" r="11" fill="#4A5578"/>
-  <text x="1015" y="980" fill="#161616" fill-opacity=".16" font-family="Arial, sans-serif" font-size="210" font-weight="800">PK</text>
 </svg>

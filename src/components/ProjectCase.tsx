@@ -28,7 +28,6 @@ export function ProjectCase({ project }: { project: Project }) {
       <Header />
       <main className="case-page">
         <section className="case-hero section-grid">
-          <p className="section-label">{project.type} / {project.year}</p>
           <h1 className="masked-title case-title">
             <span><i>{project.title}</i></span>
           </h1>
@@ -38,7 +37,7 @@ export function ProjectCase({ project }: { project: Project }) {
             <MetaItem label="Year" value={project.year} />
             <MetaItem label="Type" value={project.type} />
             <a href={project.liveUrl}>
-              Live website ↗
+              Live website {"\u2197"}
             </a>
           </div>
         </section>
@@ -120,7 +119,7 @@ export function ProjectCase({ project }: { project: Project }) {
             <h2 className="reveal-heading">
               <span>LET&apos;S MAKE</span>
               <span>SOMETHING</span>
-              <span>MEMORABLE.</span>
+              <span>MEMORABLE</span>
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
           </div>

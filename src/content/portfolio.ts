@@ -1,7 +1,6 @@
 export const site = {
   name: "Pavel Kostin",
   shortName: "PAVEL",
-  monogram: "PK",
   title: "Pavel Kostin - Web Designer & Developer in Tbilisi",
   description:
     "Independent web designer and developer creating websites, CRM flows, booking bots and lightweight automations for businesses in Tbilisi and worldwide.",
@@ -12,10 +11,10 @@ export const site = {
 };
 
 export const hero = {
-  lines: ["I design", "websites, CRM", "and automations", "for business."],
-  aria: "I design websites, CRM and automations for business.",
+  lines: ["I build websites", "that turn visitors", "into bookings"],
+  aria: "I build websites that turn visitors into bookings.",
   subtitle:
-    "Independent web designer and developer creating sharp websites, booking bots, CRM flows and launch-ready digital systems."
+    "Conversion-focused websites, booking flows and automations for service businesses."
 };
 
 export const navigation = [

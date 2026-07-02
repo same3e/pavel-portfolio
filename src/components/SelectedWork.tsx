@@ -99,7 +99,6 @@ export function SelectedWork() {
         </aside>
 
         <div className="work-list" aria-label="Selected projects">
-          <p className="section-label">01 / Selected work</p>
           <h2 id="work-title" className="sr-only">Selected work</h2>
           {projects.map((project, index) => (
             <a
@@ -116,9 +115,8 @@ export function SelectedWork() {
               onMouseEnter={() => setPreviewActive(index)}
               onMouseLeave={() => setPreviewActive(null)}
             >
-              <span>{project.year}</span>
               <strong>{project.title}</strong>
-              <small>{project.category} / {project.type}</small>
+              <small>{project.category}</small>
             </a>
           ))}
         </div>
