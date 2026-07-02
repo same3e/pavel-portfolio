@@ -3,7 +3,7 @@ export const site = {
   shortName: "PAVEL",
   title: "Pavel Kostin - Web Designer & Developer in Tbilisi",
   description:
-    "Independent web designer and developer creating websites, CRM flows, booking bots and lightweight automations for businesses in Tbilisi and worldwide.",
+    "Independent web designer and developer creating clear websites, booking flows and lightweight digital tools for service businesses in Tbilisi and worldwide.",
   availability: "Available for new projects",
   location: "Tbilisi / Worldwide",
   productionUrl: "https://pavel-portfolio-six.vercel.app/",
@@ -11,10 +11,10 @@ export const site = {
 };
 
 export const hero = {
-  lines: ["I build websites", "that turn visitors", "into bookings"],
-  aria: "I build websites that turn visitors into bookings.",
+  lines: ["I build websites", "that turn interest", "into enquiries."],
+  aria: "I build websites that turn interest into enquiries.",
   subtitle:
-    "Conversion-focused websites, booking flows and automations for service businesses."
+    "Conversion-focused websites, booking flows and lightweight integrations for service businesses."
 };
 
 export const navigation = [
@@ -26,9 +26,10 @@ export const navigation = [
 
 export const contact = {
   email: "kostinpavel447@gmail.com",
-  instagram: "https://www.instagram.com/pavel.websites?igsh=c29leDNkc3EwcDNk&utm_source=qr",
+  instagram: "https://www.instagram.com/pavel.websites/",
+  // TODO: replace with a professional Telegram username.
   telegram: "https://t.me/cndjchsjw",
-  whatsapp: "https://wa.me/995599174299"
+  whatsapp: "https://wa.me/995599174299?text=Hello%20Pavel%2C%20I%20would%20like%20to%20discuss%20a%20website%20for%20my%20business."
 };
 
 export const homepageServices = [
@@ -38,20 +39,40 @@ export const homepageServices = [
   },
   {
     title: "Development",
-    copy: "Responsive, animated and production-ready implementation."
+    copy: "Responsive, accessible and production-ready website development."
   },
   {
     title: "Launch & Integrations",
-    copy: "Forms, deployment, domains and lightweight business integrations."
+    copy: "Forms, domains, deployment, analytics and lightweight business integrations."
   },
   {
-    title: "Automation & CRM",
-    copy: "Booking bots, CRM workflows, dashboards and simple automations that remove repetitive business tasks."
+    title: "Lightweight Automations",
+    copy: "Booking flows, notifications, API integrations and simple tools that reduce repetitive tasks."
   }
 ];
 
 export const aboutCopy =
-  "Independent web designer and developer based in Tbilisi, creating visual websites and broader digital products: CRM flows, booking bots, dashboards and automation systems.";
+  "Independent web designer and developer based in Tbilisi, creating clear websites, booking flows and lightweight digital tools for service businesses.";
+
+export type Project = {
+  id: "thai-nari" | "pavel-portfolio";
+  title: string;
+  year: string;
+  category: string;
+  type: string;
+  role: string;
+  overview: string;
+  description: string;
+  route: `/work/${string}`;
+  liveUrl: string;
+  previewImage: string;
+  desktopImage?: string;
+  mobileImage?: string;
+  ogImage?: string;
+  alt: string;
+  seoTitle: string;
+  seoDescription: string;
+};
 
 export const projects = [
   {
@@ -67,8 +88,11 @@ export const projects = [
       "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
     route: "/work/thai-nari",
     liveUrl: "https://thai-sooty.vercel.app/",
+    // TODO: add real screenshots when available: /projects/thai-nari/desktop.webp and /projects/thai-nari/mobile.webp.
     previewImage: "/projects/thai-nari/preview.svg",
-    alt: "Thai Nari website preview"
+    alt: "Thai Nari website preview",
+    seoTitle: "Thai Nari - SPA Website Case Study | Pavel Kostin",
+    seoDescription: "Design and development of a responsive website concept for a Thai wellness studio."
   },
   {
     id: "pavel-portfolio",
@@ -83,12 +107,13 @@ export const projects = [
       "A personal portfolio created as a complete identity, interface and motion system for an independent web designer and developer.",
     route: "/work/pavel-portfolio",
     liveUrl: "https://pavel-portfolio-six.vercel.app/",
+    // TODO: add real screenshots when available: /projects/pavel-portfolio/desktop.webp and /projects/pavel-portfolio/mobile.webp.
     previewImage: "/projects/pavel-portfolio/preview.svg",
-    alt: "Pavel Portfolio homepage preview"
+    alt: "Pavel Portfolio homepage preview",
+    seoTitle: "Pavel Portfolio - Web Design Case Study | Pavel Kostin",
+    seoDescription: "Design and development of an editorial personal portfolio for an independent web designer."
   }
-] as const;
-
-export type Project = (typeof projects)[number];
+] satisfies readonly Project[];
 
 export const projectById = Object.fromEntries(
   projects.map((project) => [project.id, project])

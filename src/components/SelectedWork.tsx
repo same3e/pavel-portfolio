@@ -57,6 +57,10 @@ export function SelectedWork() {
   }, []);
 
   function handleProjectClick(event: React.MouseEvent<HTMLAnchorElement>, project: Project) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
     event.preventDefault();
     openProject(project.title, project.route);
   }
@@ -64,7 +68,7 @@ export function SelectedWork() {
   return (
     <section className="selected-work" id="work" aria-labelledby="work-title">
       <div className="selected-work-inner">
-        <aside className="work-sticky" aria-live="polite">
+        <aside className="work-sticky">
           <div className="work-media-shell">
             <ProjectPreviewMedia project={activeProject} />
           </div>

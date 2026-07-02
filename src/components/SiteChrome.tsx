@@ -7,6 +7,7 @@ import { contact, navigation, site } from "@/content/portfolio";
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -31,6 +32,35 @@ export function Header() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setMenuOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab" || !menuOpen) {
+        return;
+      }
+
+      const menu = document.getElementById("mobile-menu");
+      const focusable = Array.from(
+        menu?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      );
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     }
 
@@ -46,6 +76,11 @@ export function Header() {
     setTheme(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     window.localStorage.setItem("theme", nextTheme);
+  }
+
+  function closeMenu() {
+    setMenuOpen(false);
+    menuButtonRef.current?.focus();
   }
 
   return (
@@ -75,7 +110,7 @@ export function Header() {
           <span className="theme-icon theme-icon-moon" aria-hidden="true" />
         </button>
         <button
-          ref={closeButtonRef}
+          ref={menuButtonRef}
           className="menu-toggle"
           type="button"
           aria-expanded={menuOpen}
@@ -86,28 +121,33 @@ export function Header() {
         </button>
       </header>
 
-      <div className={`mobile-menu ${menuOpen ? "is-open" : ""}`} id="mobile-menu" aria-hidden={!menuOpen}>
-        <nav aria-label="Mobile navigation">
-          {navigation.map((item) => (
-            <Link href={`/${item.href}`} key={item.href} onClick={() => setMenuOpen(false)}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="mobile-menu-meta">
-          <p>{site.location}</p>
-          <p>{site.availability}</p>
-          <button type="button" onClick={toggleTheme}>
-            {theme === "dark" ? "Light mode" : "Dark mode"}
+      {menuOpen && (
+        <div className="mobile-menu is-open" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+          <button ref={closeButtonRef} className="mobile-menu-close" type="button" onClick={closeMenu}>
+            Close
           </button>
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          <nav aria-label="Mobile navigation">
+            {navigation.map((item) => (
+              <Link href={`/${item.href}`} key={item.href} onClick={closeMenu}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mobile-menu-meta">
+            <p>{site.location}</p>
+            <p>{site.availability}</p>
+            <button type="button" onClick={toggleTheme}>
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </button>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
 
-export function Footer() {
+export function Footer({ showBackHome = false }: { showBackHome?: boolean }) {
   const year = useMemo(() => new Date().getFullYear(), []);
 
   return (
@@ -115,7 +155,7 @@ export function Footer() {
       <p>Pavel Kostin - Independent Web Designer & Developer</p>
       <p>{site.location}</p>
       <p>Portfolio design and development by Pavel - {year}</p>
-      <Link href="/">Back home</Link>
+      {showBackHome ? <Link href="/">Back home</Link> : null}
     </footer>
   );
 }
@@ -125,9 +165,15 @@ export function ContactLink({ label, href }: { label: string; href: string }) {
     label === "Email" && !href.startsWith("mailto:")
       ? `mailto:${href}`
       : href;
+  const isExternal = !finalHref.startsWith("mailto:");
 
   return (
-    <a className="contact-row" href={finalHref}>
+    <a
+      className="contact-row"
+      href={finalHref}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+    >
       <span>{label}</span>
       <span>Open</span>
     </a>

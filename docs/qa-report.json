@@ -1,0 +1,301 @@
+{
+  "responsive": [
+    {
+      "width": 320,
+      "theme": "light",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "clientWidth": 375,
+      "scrollWidth": 375,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "clientWidth": 1920,
+      "scrollWidth": 1920,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(242, 240, 234, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "clientWidth": 375,
+      "scrollWidth": 375,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    },
+    {
+      "width": 1920,
+      "theme": "dark",
+      "clientWidth": 1920,
+      "scrollWidth": 1920,
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true,
+      "skip": true,
+      "mobileMenuExists": false,
+      "headerBg": "rgba(17, 17, 15, 0.76)",
+      "overflowers": []
+    }
+  ],
+  "pages": [
+    {
+      "route": "/",
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "I build websites that turn interest into enquiries.",
+      "main": true
+    },
+    {
+      "route": "/work/thai-nari",
+      "title": "Thai Nari - SPA Website Case Study | Pavel Kostin",
+      "h1": "Thai Nari",
+      "main": true
+    },
+    {
+      "route": "/work/pavel-portfolio",
+      "title": "Pavel Portfolio - Web Design Case Study | Pavel Kostin",
+      "h1": "Pavel Portfolio",
+      "main": true
+    },
+    {
+      "route": "/missing-test-route",
+      "title": "Pavel Kostin - Web Designer & Developer in Tbilisi",
+      "h1": "Page not found",
+      "main": true
+    }
+  ],
+  "contacts": [
+    {
+      "text": "EmailOpen",
+      "href": "mailto:kostinpavel447@gmail.com",
+      "target": null,
+      "rel": null
+    },
+    {
+      "text": "InstagramOpen",
+      "href": "https://www.instagram.com/pavel.websites/",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "TelegramOpen",
+      "href": "https://t.me/cndjchsjw",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "WhatsAppOpen",
+      "href": "https://wa.me/995599174299?text=Hello%20Pavel%2C%20I%20would%20like%20to%20discuss%20a%20website%20for%20my%20business.",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    }
+  ],
+  "endpoints": [
+    {
+      "endpoint": "/robots.txt",
+      "status": 200,
+      "contentType": "text/plain"
+    },
+    {
+      "endpoint": "/sitemap.xml",
+      "status": 200,
+      "contentType": "application/xml"
+    },
+    {
+      "endpoint": "/icon",
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "endpoint": "/opengraph-image",
+      "status": 200,
+      "contentType": "image/png"
+    }
+  ],
+  "menu": {
+    "before": {
+      "exists": false,
+      "active": "pixelify_sans_730e4fe9-module__dNhn1a__variable inter_tight_3685dcac-module__YI0qoq__variable ibm_plex_mono_6b8bdd60-module__PbV63q__variable"
+    },
+    "afterOpen": {
+      "exists": true,
+      "activeText": "Close",
+      "expanded": "true",
+      "bodyOverflow": "hidden"
+    },
+    "afterTab": {
+      "activeText": "Work",
+      "insideMenu": true
+    },
+    "afterShiftTab": {
+      "activeText": "Close",
+      "insideMenu": true
+    },
+    "afterEscape": {
+      "exists": false,
+      "activeClass": "menu-toggle",
+      "expanded": "false"
+    }
+  },
+  "routeTransition": {
+    "linkFound": true,
+    "dispatchResult": true,
+    "prevented": false
+  },
+  "screenshots": [
+    "C:\\Users\\kosti\\Desktop\\pavel-portfolio\\docs\\qa-screenshots\\home-1440-light.png",
+    "C:\\Users\\kosti\\Desktop\\pavel-portfolio\\docs\\qa-screenshots\\home-390-light.png",
+    "C:\\Users\\kosti\\Desktop\\pavel-portfolio\\docs\\qa-screenshots\\home-1440-dark.png",
+    "C:\\Users\\kosti\\Desktop\\pavel-portfolio\\docs\\qa-screenshots\\thai-case-1440-dark.png"
+  ],
+  "consoleErrors": [],
+  "favicon": {
+    "status": 200,
+    "contentType": "image/x-icon"
+  }
+}

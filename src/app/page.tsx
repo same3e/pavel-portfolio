@@ -1,17 +1,12 @@
-"use client";
-
-import { useState } from "react";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { SelectedWork } from "@/components/SelectedWork";
-import { aboutCopy, hero, homepageServices, site } from "@/content/portfolio";
+import { aboutCopy, contact, hero, homepageServices, site } from "@/content/portfolio";
 
 export default function Home() {
-  const [activeService, setActiveService] = useState(0);
-
   return (
     <>
       <Header />
-      <main id="top">
+      <main id="main-content">
         <section className="hero home-hero section-grid">
           <div className="hero-id">
             <p>
@@ -42,11 +37,11 @@ export default function Home() {
           </div>
 
           <div className="hero-actions">
-            <a className="button" href="#work" data-label="VIEW MY WORK">
-              <span>VIEW MY WORK</span>
-            </a>
-            <a className="button primary" href="#contact" data-label="START A PROJECT">
+            <a className="button primary" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <span>START A PROJECT</span>
+            </a>
+            <a className="button" href="#work">
+              <span>VIEW MY WORK</span>
             </a>
           </div>
         </section>
@@ -61,18 +56,11 @@ export default function Home() {
           </div>
           <div className="service-list">
             {homepageServices.map((service, index) => (
-              <button
-                className={`service-row ${activeService === index ? "is-active" : ""}`}
-                type="button"
-                key={service.title}
-                onClick={() => setActiveService(index)}
-                onFocus={() => setActiveService(index)}
-              >
+              <article className="service-row" key={service.title}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{service.title}</h3>
                 <p>{service.copy}</p>
-                <i aria-hidden="true">{"\u2197"}</i>
-              </button>
+              </article>
             ))}
           </div>
         </section>
@@ -98,13 +86,13 @@ export default function Home() {
 
         <section className="contact section-grid" id="contact">
           <div>
-            <h2 className="reveal-heading">
+            <h2 className="reveal-heading" aria-label="LET'S MAKE SOMETHING MEMORABLE.">
               <span>LET&apos;S MAKE</span>
               <span>SOMETHING</span>
               <span>MEMORABLE</span>
             </h2>
             <p>Have a project or business that needs a stronger digital presence?</p>
-            <a className="button contact-cta" href="mailto:kostinpavel447@gmail.com" data-label="START A PROJECT">
+            <a className="button primary contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <span>START A PROJECT</span>
             </a>
           </div>
