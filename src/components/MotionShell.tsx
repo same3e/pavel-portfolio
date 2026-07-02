@@ -22,6 +22,7 @@ export function MotionShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [introVisible, setIntroVisible] = useState(true);
   const [introResolved, setIntroResolved] = useState(false);
+  const [introProgress, setIntroProgress] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [transition, setTransition] = useState<{ active: boolean; title: string }>({
     active: false,
@@ -38,12 +39,27 @@ export function MotionShell({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    const progressTimer = window.setInterval(() => {
+      setIntroProgress((progress) => {
+        if (progress >= 100) {
+          window.clearInterval(progressTimer);
+          return 100;
+        }
+
+        return Math.min(100, progress + Math.ceil((100 - progress) / 8));
+      });
+    }, 70);
+
     const timer = window.setTimeout(() => {
+      setIntroProgress(100);
       setIntroVisible(false);
       setIntroResolved(true);
-    }, 1780);
+    }, 2320);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearInterval(progressTimer);
+      window.clearTimeout(timer);
+    };
   }, []);
 
   const value = useMemo<MotionContextValue>(
@@ -79,18 +95,15 @@ export function MotionShell({ children }: { children: React.ReactNode }) {
           <button type="button" onClick={skipIntro}>
             Skip
           </button>
+          <div className="intro-loader" aria-live="polite">
+            <span>{introProgress}%</span>
+            <i>Loading</i>
+          </div>
           <div className="intro-name" aria-label="PAVEL KOSTIN">
             <div className="intro-word">
-              {"PAVEL".split("").map((letter, index) => (
-                <span style={{ animationDelay: `${index * 55}ms` }} key={`pavel-${letter}-${index}`}>
-                  <i>{letter}</i>
-                </span>
-              ))}
-            </div>
-            <div className="intro-word intro-word-last">
-              {"KOSTIN".split("").map((letter, index) => (
-                <span style={{ animationDelay: `${310 + index * 46}ms` }} key={`kostin-${letter}-${index}`}>
-                  <i>{letter}</i>
+              {Array.from("PAVEL KOSTIN").map((letter, index) => (
+                <span style={{ animationDelay: `${index * 42}ms` }} key={`intro-name-${letter}-${index}`}>
+                  <i>{letter === " " ? "\u00A0" : letter}</i>
                 </span>
               ))}
             </div>
