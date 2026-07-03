@@ -936,8 +936,8 @@ h2 {
 
 .case-solution div {
   grid-column: span 6;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
+  padding-top: 0;
+  border-top: 0;
 }
 
 .case-solution p {
@@ -946,7 +946,7 @@ h2 {
   color: var(--text);
   font-family: var(--font-body), sans-serif;
   font-size: clamp(1.2rem, 1.95vw, 2.25rem);
-  line-height: 1.26;
+  line-height: 1.12;
 }
 
 .case-cta {
