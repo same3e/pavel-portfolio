@@ -48,13 +48,16 @@ export default function Home() {
 
         <section className="services service-section section-grid" id="services">
           <div className="service-intro">
-            <h2
-              className="reveal-heading service-statement"
-              aria-label="Every project starts as a business problem, not a template — website, booking flow or a small automation that saves you hours each week."
-            >
-              <span>Every project starts as a business problem, not a template — </span>
-              <span>website, booking flow or a small automation that saves you hours each week.</span>
-            </h2>
+            <SplitRevealText
+              as="h2"
+              className="service-statement"
+              ariaLabel="Every project starts as a business problem, not a template — website, booking flow or a small automation that saves you hours each week."
+              lines={[
+                "Every project starts as a business problem, not a template —",
+                "website, booking flow or a small automation that saves you hours each week."
+              ]}
+              mode="scroll"
+            />
           </div>
           <div className="service-list">
             {serviceCards.map((service) => (

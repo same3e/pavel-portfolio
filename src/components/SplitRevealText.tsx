@@ -80,10 +80,9 @@ export function SplitRevealText({
 
       const trigger = ScrollTrigger.create({
         trigger: element,
-        start: "top 82%",
-        end: "bottom 18%",
-        onEnter: play,
-        onEnterBack: play
+        start: "top 95%",
+        once: true,
+        onEnter: play
       });
 
       return () => {

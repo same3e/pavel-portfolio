@@ -596,9 +596,10 @@ h2 {
 }
 
 .service-statement {
-  max-width: 1180px;
-  margin-top: 0;
-  font-size: clamp(3rem, 5.25vw, 7.2rem);
+  max-width: 1040px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: clamp(2.6rem, 4.4vw, 5.9rem);
   line-height: 0.94;
 }
 
@@ -1205,7 +1206,7 @@ h2 {
   }
 
   .service-statement {
-    font-size: clamp(2.6rem, 12vw, 4.7rem);
+    font-size: clamp(2.15rem, 10vw, 4rem);
   }
 
   .service-visual {
