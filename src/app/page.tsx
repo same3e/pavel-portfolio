@@ -33,6 +33,20 @@ export default function Home() {
 
           <SplitRevealText as="h1" className="masked-title" ariaLabel={hero.aria} lines={hero.lines} mode="load" />
 
+          <div className="hero-portrait-scene">
+            <div className="hero-portrait-light" aria-hidden="true" />
+            <div className="hero-portrait-object">
+              <Image
+                src="/hero.png"
+                alt="3D pixel portrait"
+                fill
+                priority
+                quality={100}
+                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 55vw, 680px"
+              />
+            </div>
+          </div>
+
           <div className="hero-subtitle">
             <p>{hero.subtitle}</p>
           </div>
