@@ -64,7 +64,7 @@ export function SplitRevealText({
           filter: "blur(0px)",
           y: 0,
           clearProps: "filter,opacity,transform,willChange",
-          duration: 0.68,
+          duration: 1.2,
           ease: "power2.out",
           stagger: 0.05,
           willChange: "transform,filter,opacity"
