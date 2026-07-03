@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { useMotionShell } from "@/components/MotionShell";
+import { SplitRevealText } from "@/components/SplitRevealText";
 import { contact, Project, projects } from "@/content/portfolio";
 
 function MetaItem({ label, value }: { label: string; value: string }) {
@@ -84,34 +85,26 @@ export function ProjectCase({ project }: { project: Project }) {
         <section className="case-details section-grid">
           <article>
             <span>Visual system</span>
-            <p>
-              The page system uses large editorial type, controlled spacing and clear visual contrast so the project can be understood quickly.
-            </p>
+            <p>{project.visualSystem}</p>
           </article>
           <article>
             <span>Typography</span>
-            <p>
-              Oversized display moments are balanced with precise metadata, making the experience feel visual without losing structure.
-            </p>
+            <p>{project.typography}</p>
           </article>
           <article>
             <span>Motion</span>
-            <p>
-              Masked reveals, directional media movement and route transitions create rhythm while keeping the interface responsive.
-            </p>
+            <p>{project.motion}</p>
           </article>
         </section>
 
         <section className="case-solution section-grid">
           <div>
             <span>Context</span>
-            <p>{project.overview}</p>
+            <SplitRevealText as="p" ariaLabel={project.context} text={project.context} mode="scroll" />
           </div>
           <div>
             <span>Direction</span>
-            <p>
-              A focused visual identity, responsive interface and motion system designed to make the work itself carry the story.
-            </p>
+            <SplitRevealText as="p" ariaLabel={project.direction} text={project.direction} mode="scroll" />
           </div>
         </section>
 
@@ -120,11 +113,12 @@ export function ProjectCase({ project }: { project: Project }) {
           <a className="text-cta case-live-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
             <LetterSwapText label="Visit live project" />
           </a>
-          <a className="next-project-link" href={nextProject.route} onClick={openNext}>
-            <LetterSwapText label="Next project" /><br />
-            <span>{nextProject.title}</span>
-          </a>
         </section>
+
+        <a className="next-project-teaser" href={nextProject.route} onClick={openNext}>
+          <span className="next-project-label">Next project</span>
+          <h2>{nextProject.title}</h2>
+        </a>
 
         <section className="contact section-grid">
           <div>

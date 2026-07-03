@@ -167,8 +167,7 @@ p {
 .footer a,
 .case-meta a,
 .work-case-link,
-.text-cta,
-.next-project-link {
+.text-cta {
   position: relative;
   transition: color 180ms ease;
 }
@@ -177,8 +176,7 @@ p {
 .footer a:hover,
 .case-meta a:hover,
 .work-case-link:hover,
-.text-cta:hover,
-.next-project-link:hover {
+.text-cta:hover {
   color: inherit;
   opacity: 0.7;
 }
@@ -853,12 +851,13 @@ h2 {
 }
 
 .case-title {
-  grid-column: 1 / 13;
+  grid-column: 1 / 8;
   font-size: clamp(4.2rem, 10.8vw, 14rem);
 }
 
 .case-hero>p {
-  grid-column: 7 / 13;
+  grid-column: 8 / 13;
+  align-self: end;
   max-width: 680px;
   color: var(--text);
 }
@@ -945,9 +944,9 @@ h2 {
   max-width: 650px;
   margin-top: 26px;
   color: var(--text);
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(1.7rem, 3.4vw, 4.4rem);
-  line-height: 1.02;
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(1.2rem, 1.95vw, 2.25rem);
+  line-height: 1.26;
 }
 
 .case-cta {
@@ -962,27 +961,40 @@ h2 {
   grid-column: 7 / 9;
 }
 
-.next-project-link {
-  grid-column: 9 / 13;
-  padding-top: 16px;
+.next-project-teaser {
+  display: block;
+  width: 100%;
+  padding: clamp(48px, 8vw, 96px) max(var(--gutter), calc((100% - var(--max)) / 2));
   border-top: 1px solid var(--line);
-  color: var(--muted);
+  color: var(--text);
+  transition: background-color 220ms ease, color 220ms ease, padding-left 220ms ease;
 }
 
-.next-project-link .letter-swap {
+.next-project-label {
+  display: block;
+  margin-bottom: clamp(18px, 2.2vw, 32px);
+  color: var(--muted);
   font-family: var(--font-mono), monospace;
   font-size: 0.85rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  transition: color 220ms ease;
 }
 
-.next-project-link span {
-  display: block;
-  margin-top: 14px;
-  color: var(--text);
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(1.6rem, 2.8vw, 3.2rem);
-  line-height: 1;
+.next-project-teaser h2 {
+  width: min(var(--max), 100%);
+  margin: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .next-project-teaser:hover {
+    padding-left: calc(max(var(--gutter), calc((100% - var(--max)) / 2)) + 18px);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .next-project-teaser:hover .next-project-label {
+    color: var(--accent);
+  }
 }
 
 .not-found {
@@ -1064,13 +1076,13 @@ h2 {
   .about-meta-list,
   .contact>div:first-child,
   .contact-list,
+  .case-title,
   .case-hero>p,
   .case-meta,
   .case-desktop,
   .case-phone,
   .case-cta h2,
   .case-cta>.case-live-link,
-  .next-project-link,
   .not-found>div {
     grid-column: 1 / 13;
   }

@@ -63,6 +63,11 @@ export type Project = {
   role: string;
   overview: string;
   description: string;
+  visualSystem: string;
+  typography: string;
+  motion: string;
+  context: string;
+  direction: string;
   route: `/work/${string}`;
   liveUrl: string;
   previewImage: string;
@@ -86,6 +91,16 @@ export const projects = [
       "A digital experience for a Thai wellness studio, created to translate its calm atmosphere into a refined and easy-to-explore website.",
     description:
       "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
+    visualSystem:
+      "A warm, tactile palette - cream and beige against near-black - makes the calm interior feel like it's floating inside the interface, not printed on a template.",
+    typography:
+      "A soft pixel headline sits above quiet, plain body text - the same contrast between ritual and practicality that defines an actual spa visit.",
+    motion:
+      "Panels unfold like doors opening onto a treatment room - slow, deliberate reveals instead of quick fades, matching the pace of a real visit rather than a scroll.",
+    context:
+      "Wellness studios often end up with generic spa templates that photograph well but explain nothing about the actual experience of walking in.",
+    direction:
+      "Slowed the whole flow down on purpose - fewer sections, more breathing room - so browsing the site takes roughly as long as deciding whether to book.",
     route: "/work/thai-nari",
     liveUrl: "https://thai-sooty.vercel.app/",
     // TODO: add real screenshots when available: /projects/thai-nari/desktop.webp and /projects/thai-nari/mobile.webp.
@@ -105,6 +120,16 @@ export const projects = [
       "A personal portfolio focused on editorial typography, project storytelling and a responsive motion system.",
     description:
       "A personal portfolio created as a complete identity, interface and motion system for an independent web designer and developer.",
+    visualSystem:
+      "Everything here doubles as a live demo - the grid, the type scale, the color system are the actual production styles a client would get, not a mockup wrapped around fake content.",
+    typography:
+      "A light pixel display face carries only headlines and labels; every paragraph stays in a plain grotesk, so the accent reads as a signature, not a readability tax.",
+    motion:
+      "Word-by-word reveals and letter-swap hovers exist to prove the animation is hand-built with GSAP, not a template effect - the kind of detail a client notices without being told.",
+    context:
+      "A freelancer's site usually reads like a brochure - logo, services, contact - and proves nothing about how the person actually builds. This one had to work as the strongest case study in the whole portfolio.",
+    direction:
+      "Built the site itself as the pitch: real code, a working theme switch, real motion - so sending the link in a cold DM does more work than a sentence ever could.",
     route: "/work/pavel-portfolio",
     liveUrl: "https://pavel-portfolio-six.vercel.app/",
     // TODO: add real screenshots when available: /projects/pavel-portfolio/desktop.webp and /projects/pavel-portfolio/mobile.webp.
