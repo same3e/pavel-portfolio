@@ -598,7 +598,7 @@ h2 {
 .service-statement {
   max-width: 1040px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   font-size: clamp(2.6rem, 4.4vw, 5.9rem);
   line-height: 0.94;
 }
