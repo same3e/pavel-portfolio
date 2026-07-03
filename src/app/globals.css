@@ -667,7 +667,7 @@ h2 {
 
 .service-visual {
   display: grid;
-  place-items: center;
+  place-items: center start;
   min-height: clamp(180px, 20vw, 310px);
 }
 
