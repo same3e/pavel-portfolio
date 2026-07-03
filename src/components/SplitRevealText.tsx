@@ -50,28 +50,28 @@ export function SplitRevealText({
         wordsClass: "split-word"
       });
       const words = split.words;
+      const hiddenState = {
+        opacity: 0,
+        filter: "blur(6px)",
+        y: 12
+      };
 
       function play() {
         gsap.killTweensOf(words);
-        gsap.fromTo(
-          words,
-          {
-            opacity: 0,
-            filter: "blur(6px)",
-            y: 12
-          },
-          {
-            opacity: 1,
-            filter: "blur(0px)",
-            y: 0,
-            clearProps: "filter,opacity,transform,willChange",
-            duration: 0.68,
-            ease: "power2.out",
-            stagger: 0.05,
-            willChange: "transform,filter,opacity"
-          }
-        );
+        gsap.set(words, hiddenState);
+        gsap.to(words, {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          clearProps: "filter,opacity,transform,willChange",
+          duration: 0.68,
+          ease: "power2.out",
+          stagger: 0.05,
+          willChange: "transform,filter,opacity"
+        });
       }
+
+      gsap.set(words, hiddenState);
 
       if (mode === "load") {
         play();

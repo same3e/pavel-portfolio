@@ -62,11 +62,12 @@ export default function Home() {
 
         <section className="contact section-grid" id="contact">
           <div>
-            <h2 className="reveal-heading" aria-label="LET'S MAKE SOMETHING MEMORABLE.">
-              <span>LET&apos;S MAKE</span>
-              <span>SOMETHING</span>
-              <span>MEMORABLE</span>
-            </h2>
+            <SplitRevealText
+              as="h2"
+              ariaLabel="LET'S MAKE SOMETHING MEMORABLE."
+              lines={["LET'S MAKE", "SOMETHING", "MEMORABLE"]}
+              mode="scroll"
+            />
             <p>Have a project or business that needs a stronger digital presence?</p>
             <a className="text-cta contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
               <LetterSwapText label="START A PROJECT" />
