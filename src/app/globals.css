@@ -524,8 +524,11 @@ p {
 .hero-actions {
   grid-column: 1 / 7;
   display: flex;
+  align-items: flex-start;
+  align-self: start;
   flex-wrap: wrap;
   gap: 12px;
+
 }
 
 /* selected work */
@@ -629,7 +632,7 @@ p {
 
 .work-list {
   display: grid;
-  gap: clamp(10px, 1.2vw, 18px);
+  gap: 0;
   overflow: visible;
   padding: clamp(8px, 1vw, 18px) 0;
 }
@@ -896,7 +899,7 @@ h2 {
 .text-cta.hero-cta {
   align-items: flex-start;
   min-height: 0;
-  padding: 0 0 4px;
+  padding: 0 0 17px;
   line-height: 1.16;
 }
 
