@@ -130,7 +130,7 @@ export function ProjectCase({ project }: { project: Project }) {
             />
             <p>Have a project or business that needs a stronger digital presence?</p>
             <a className="text-cta contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
-              <LetterSwapText label="START A PROJECT" />
+              <LetterSwapText label="LET’S BUILD YOUR WEBSITE" />
             </a>
           </div>
           <ContactLinks />
