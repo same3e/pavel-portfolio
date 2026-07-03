@@ -433,7 +433,7 @@ p {
 
 .work-media-shell {
   overflow: visible;
-  aspect-ratio: 1.18;
+  aspect-ratio: 16 / 9;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
