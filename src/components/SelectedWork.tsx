@@ -24,27 +24,27 @@ function ProjectPreviewMedia({ project, mediaRef }: { project: Project; mediaRef
 
 export function SelectedWork() {
   const { openProject } = useMotionShell();
-  const [scrollActive, setScrollActive] = useState(0);
-  const [previewActive, setPreviewActive] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const activeIndex = previewActive ?? scrollActive;
   const activeProject = projects[activeIndex];
 
   const alignPreviewToProject = useCallback((index: number, animate = true) => {
     const section = sectionRef.current;
     const preview = previewRef.current;
+    const media = mediaRef.current;
     const item = itemRefs.current[index];
 
-    if (!section || !preview || !item) {
+    if (!section || !preview || !media || !item) {
       return;
     }
 
     const sectionRect = section.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
-    const targetY = Math.max(0, itemRect.top - sectionRect.top - 18);
+    const mediaRect = media.getBoundingClientRect();
+    const targetY = Math.max(0, itemRect.top - sectionRect.top + itemRect.height / 2 - mediaRect.height / 2);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion || !animate) {
@@ -58,34 +58,6 @@ export function SelectedWork() {
       ease: "power3.out",
       overwrite: true
     });
-  }, []);
-
-  useEffect(() => {
-    const elements = itemRefs.current.filter(Boolean) as HTMLAnchorElement[];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (!visible) {
-          return;
-        }
-
-        const index = Number((visible.target as HTMLElement).dataset.index);
-        if (!Number.isNaN(index)) {
-          setScrollActive(index);
-        }
-      },
-      {
-        root: null,
-        threshold: [0.35, 0.55, 0.75],
-        rootMargin: "-22% 0px -28% 0px"
-      }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -125,7 +97,7 @@ export function SelectedWork() {
   }, [activeIndex, alignPreviewToProject]);
 
   function activatePreview(index: number) {
-    setPreviewActive(index);
+    setActiveIndex(index);
     alignPreviewToProject(index);
   }
 
@@ -156,9 +128,7 @@ export function SelectedWork() {
                 data-index={index}
                 onClick={(event) => handleProjectClick(event, project)}
                 onFocus={() => activatePreview(index)}
-                onBlur={() => setPreviewActive(null)}
                 onMouseEnter={() => activatePreview(index)}
-                onMouseLeave={() => setPreviewActive(null)}
               >
                 <strong>{project.title}</strong>
                 <small>{project.category}</small>

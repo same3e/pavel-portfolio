@@ -104,7 +104,7 @@ export const projects = [
     route: "/work/thai-nari",
     liveUrl: "https://thai-sooty.vercel.app/",
     // TODO: add real screenshots when available: /projects/thai-nari/desktop.webp and /projects/thai-nari/mobile.webp.
-    previewImage: "/projects/thai-nari/preview.svg",
+    previewImage: "/projects/thai-nari/preview.webp",
     alt: "Thai Nari website preview",
     seoTitle: "Thai Nari - SPA Website Case Study | Pavel Kostin",
     seoDescription: "Design and development of a responsive website concept for a Thai wellness studio."
@@ -133,7 +133,7 @@ export const projects = [
     route: "/work/pavel-portfolio",
     liveUrl: "https://pavel-portfolio-six.vercel.app/",
     // TODO: add real screenshots when available: /projects/pavel-portfolio/desktop.webp and /projects/pavel-portfolio/mobile.webp.
-    previewImage: "/projects/pavel-portfolio/preview.svg",
+    previewImage: "/projects/pavel-portfolio/preview.webp",
     alt: "Pavel Portfolio homepage preview",
     seoTitle: "Pavel Portfolio - Web Design Case Study | Pavel Kostin",
     seoDescription: "Design and development of an editorial personal portfolio for an independent web designer."
