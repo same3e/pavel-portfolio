@@ -582,8 +582,8 @@ p {
   padding: clamp(72px, 11vw, 160px) 0;
 }
 
-.compact-services>div:first-child {
-  grid-column: 1 / 5;
+.service-intro {
+  grid-column: 1 / 13;
 }
 
 h2 {
@@ -595,36 +595,48 @@ h2 {
   letter-spacing: 0;
 }
 
+.service-statement {
+  max-width: 1180px;
+  margin-top: 0;
+  font-size: clamp(3rem, 5.25vw, 7.2rem);
+  line-height: 0.94;
+}
+
 .service-list {
-  grid-column: 5 / 13;
+  grid-column: 1 / 13;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  margin-top: clamp(46px, 6vw, 92px);
 }
 
 .service-row {
-  position: relative;
   display: grid;
-  grid-template-columns: 90px minmax(180px, 0.8fr) 1fr;
-  gap: clamp(16px, 2vw, 30px);
+  grid-template-rows: minmax(180px, 1fr) auto auto;
+  align-content: start;
+  gap: clamp(16px, 1.8vw, 26px);
   width: 100%;
-  padding: clamp(22px, 3vw, 40px) 0;
+  min-width: 0;
+  padding-top: clamp(18px, 2vw, 28px);
   border-top: 1px solid var(--line);
 }
 
-.service-row::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--accent);
-  transition: width 260ms ease;
+.service-visual {
+  display: grid;
+  place-items: center;
+  min-height: clamp(180px, 20vw, 310px);
+}
+
+.service-visual img {
+  width: min(76%, 240px);
+  height: min(76%, 240px);
+  object-fit: contain;
 }
 
 .service-row h3 {
-  font-size: clamp(1.7rem, 3vw, 4rem);
+  font-size: clamp(1.35rem, 2vw, 2.6rem);
   font-weight: 600;
-  line-height: 1;
-  transition: transform 220ms ease;
+  line-height: 1.02;
 }
 
 .service-row p,
@@ -640,19 +652,6 @@ h2 {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .service-row:hover::before {
-    width: 100%;
-  }
-
-  .service-row:hover>span {
-    color: inherit;
-    opacity: 0.7;
-  }
-
-  .service-row:hover h3 {
-    transform: translateX(8px);
-  }
-
   .contact-list:hover .contact-row {
     opacity: 0.42;
   }
@@ -1069,7 +1068,6 @@ h2 {
   .hero-id,
   .hero-subtitle,
   .hero-actions,
-  .compact-services>div:first-child,
   .service-list,
   .minimal-about p,
   .about-statement,
@@ -1116,6 +1114,10 @@ h2 {
 
   .about-meta-list {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .service-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .case-meta {
@@ -1196,6 +1198,18 @@ h2 {
   .service-row {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+
+  .service-list {
+    grid-template-columns: 1fr;
+  }
+
+  .service-statement {
+    font-size: clamp(2.6rem, 12vw, 4.7rem);
+  }
+
+  .service-visual {
+    min-height: 220px;
   }
 
   .work-list-item {

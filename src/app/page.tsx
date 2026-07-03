@@ -1,8 +1,21 @@
+import Image from "next/image";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { SelectedWork } from "@/components/SelectedWork";
 import { SplitRevealText } from "@/components/SplitRevealText";
 import { aboutCopy, contact, hero, homepageServices, site } from "@/content/portfolio";
+
+const serviceImages = [
+  { src: "/webdesign.png", alt: "", width: 520, height: 520 },
+  { src: "/cube.png", alt: "", width: 520, height: 520 },
+  { src: "/intagrayion.png", alt: "", width: 520, height: 520 },
+  { src: "/automation.png", alt: "", width: 520, height: 520 }
+] as const;
+
+const serviceCards = homepageServices.map((service, index) => ({
+  ...service,
+  image: serviceImages[index]!
+}));
 
 export default function Home() {
   return (
@@ -33,16 +46,28 @@ export default function Home() {
 
         <SelectedWork />
 
-        <section className="services compact-services section-grid" id="services">
-          <div>
-            <h2 className="reveal-heading">
-              <span>Design build launch</span>
+        <section className="services service-section section-grid" id="services">
+          <div className="service-intro">
+            <h2
+              className="reveal-heading service-statement"
+              aria-label="Every project starts as a business problem, not a template — website, booking flow or a small automation that saves you hours each week."
+            >
+              <span>Every project starts as a business problem, not a template — </span>
+              <span>website, booking flow or a small automation that saves you hours each week.</span>
             </h2>
           </div>
           <div className="service-list">
-            {homepageServices.map((service, index) => (
+            {serviceCards.map((service) => (
               <article className="service-row" key={service.title}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div className="service-visual" aria-hidden="true">
+                  <Image
+                    src={service.image.src}
+                    alt={service.image.alt}
+                    width={service.image.width}
+                    height={service.image.height}
+                    sizes="(max-width: 680px) 70vw, (max-width: 1024px) 34vw, 18vw"
+                  />
+                </div>
                 <h3>{service.title}</h3>
                 <p>{service.copy}</p>
               </article>
