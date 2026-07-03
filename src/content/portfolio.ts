@@ -3,7 +3,7 @@ export const site = {
   shortName: "PAVEL",
   title: "Pavel Kostin - Web Designer & Developer in Tbilisi",
   description:
-    "Independent web designer and developer creating clear websites, booking flows and lightweight digital tools for service businesses in Tbilisi and worldwide.",
+    "Independent web designer and developer creating clear websites, booking flows and lightweight digital tools for service businesses in Tbilisi and worldwide",
   availability: "Available for new projects",
   location: "Tbilisi / Worldwide",
   productionUrl: "https://pavel-portfolio-six.vercel.app/",
@@ -11,8 +11,8 @@ export const site = {
 };
 
 export const hero = {
-  lines: ["I build websites", "that turn interest", "into enquiries."],
-  aria: "I build websites that turn interest into enquiries.",
+  lines: ["I build websites", "that turn interest", "into enquiries"],
+  aria: "I build websites that turn interest into enquiries",
   subtitle:
     "Conversion-focused websites, booking flows and lightweight integrations for service businesses."
 };
@@ -52,7 +52,7 @@ export const homepageServices = [
 ];
 
 export const aboutCopy =
-  "Independent web designer and developer based in Tbilisi, creating clear websites, booking flows and lightweight digital tools for service businesses.";
+  "Independent web designer and developer based in Tbilisi, creating clear websites, booking flows and lightweight digital tools for service businesses";
 
 export type Project = {
   id: "thai-nari" | "pavel-portfolio";

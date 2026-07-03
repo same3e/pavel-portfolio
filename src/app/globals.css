@@ -47,6 +47,17 @@ body {
   transition: background-color 240ms ease, color 240ms ease;
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  clip-path: circle(0 at var(--theme-x, 50vw) var(--theme-y, 50vh));
+  animation: theme-circle-reveal 680ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -398,6 +409,10 @@ p {
   overflow: hidden;
 }
 
+.hero-portrait-frame.is-tracking {
+  border-color: color-mix(in srgb, var(--text) 42%, transparent);
+}
+
 .hero-portrait-frame::before,
 .hero-portrait-frame::after {
   content: "";
@@ -457,7 +472,6 @@ p {
   background: color-mix(in srgb, var(--dark) 78%, var(--background));
 }
 
-.portrait-viewport::before,
 .portrait-viewport::after {
   content: "";
   position: absolute;
@@ -465,12 +479,16 @@ p {
   pointer-events: none;
 }
 
-.portrait-viewport::before {
+.portrait-marker {
+  position: absolute;
   left: 18px;
   top: 18px;
+  z-index: 2;
   width: 8px;
   height: 8px;
   border: 1px solid color-mix(in srgb, var(--text) 42%, transparent);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
 }
 
 .portrait-viewport::after {
@@ -482,13 +500,30 @@ p {
   transform: translateX(-50%);
 }
 
-.portrait-viewport img {
+.portrait-float,
+.portrait-tracking,
+.portrait-image-scale {
+  position: absolute;
+  inset: 0;
+}
+
+.portrait-float {
+  animation: portraitObjectFloat 6.4s ease-in-out infinite;
+}
+
+.portrait-tracking {
+  transform: translate3d(0, 0, 0);
+}
+
+.portrait-image-scale {
+  transform: translate3d(0, 2%, 0) scale(1.08);
+  transform-origin: center bottom;
+}
+
+.portrait-image-scale img {
   object-fit: contain;
   object-position: center bottom;
   image-rendering: auto;
-  transform: translate3d(0, 2%, 0) scale(1.08);
-  transform-origin: center bottom;
-  animation: portraitObjectFloat 6.4s ease-in-out infinite;
 }
 
 .masked-title>span,
@@ -722,7 +757,7 @@ h2 {
 
 .service-row {
   display: grid;
-  grid-template-rows: minmax(180px, 1fr) auto auto;
+  grid-template-rows: clamp(210px, 18vw, 270px) minmax(2.12em, auto) auto;
   align-content: start;
   gap: clamp(16px, 1.8vw, 26px);
   width: 100%;
@@ -733,37 +768,57 @@ h2 {
 
 .service-visual {
   display: grid;
-  place-items: center start;
-  min-height: clamp(180px, 20vw, 310px);
+  place-items: start start;
+  width: 100%;
+  min-height: 0;
+  overflow: visible;
 }
 
 .service-visual img {
-  width: min(76%, 240px);
-  height: min(76%, 240px);
+  width: clamp(170px, 12.5vw, 230px);
+  height: clamp(170px, 12.5vw, 230px);
   object-fit: contain;
-  transform: translateX(var(--service-icon-shift, 0));
+  filter: brightness(0) saturate(100%);
+  opacity: 0.78;
+  transform: translate3d(var(--service-icon-shift-x, 0), var(--service-icon-shift-y, 0), 0);
+  transition: filter 240ms ease, opacity 240ms ease;
+}
+
+[data-theme="dark"] .service-visual img {
+  filter: none;
+  opacity: 1;
 }
 
 .service-row:nth-child(1) {
-  --service-icon-shift: -24.88%;
+  --service-icon-shift-x: -24.88%;
+  --service-icon-shift-y: -13.56%;
 }
 
 .service-row:nth-child(2) {
-  --service-icon-shift: -13.4%;
+  --service-icon-shift-x: -13.4%;
+  --service-icon-shift-y: -7.66%;
 }
 
 .service-row:nth-child(3) {
-  --service-icon-shift: -2.23%;
+  --service-icon-shift-x: -2.23%;
+  --service-icon-shift-y: -5.58%;
 }
 
 .service-row:nth-child(4) {
-  --service-icon-shift: -11.96%;
+  --service-icon-shift-x: -11.96%;
+  --service-icon-shift-y: -11.48%;
 }
 
 .service-row h3 {
+  align-self: start;
+  min-height: 2.12em;
   font-size: clamp(1.35rem, 2vw, 2.6rem);
   font-weight: 600;
   line-height: 1.02;
+}
+
+.service-row p {
+  align-self: start;
 }
 
 .service-row p,
@@ -956,26 +1011,70 @@ h2 {
   display: grid;
   place-items: center;
   pointer-events: none;
-  clip-path: inset(100% 0 0 0);
-  background: var(--dark);
   color: #fff;
-  transition: clip-path 520ms cubic-bezier(0.76, 0, 0.24, 1);
+  visibility: hidden;
 }
 
-.route-transition.is-active {
-  clip-path: inset(0);
+.route-transition--covering,
+.route-transition--covered,
+.route-transition--revealing {
+  visibility: visible;
+}
+
+.route-transition-columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.route-transition-column {
+  background: var(--dark);
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+
+.route-transition--covering .route-transition-column {
+  transform: scaleY(1);
+  transition: transform 500ms cubic-bezier(0.76, 0, 0.24, 1) var(--column-delay);
+}
+
+.route-transition--covered .route-transition-column {
+  transform: scaleY(1);
+}
+
+.route-transition--revealing .route-transition-column {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 620ms cubic-bezier(0.76, 0, 0.24, 1) var(--column-reverse-delay);
 }
 
 .route-transition p {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(4rem, 13vw, 17rem);
+  font-size: clamp(3.5rem, 8vw, 9rem);
   font-weight: 400;
   line-height: 0.9;
   opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.route-transition.is-active p {
-  animation: routeName 520ms ease 140ms both;
+.route-transition--covering p {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 430ms;
+}
+
+.route-transition--covered p {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.route-transition--revealing p {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
 }
 
 .case-page {
@@ -1167,14 +1266,6 @@ h2 {
   }
 }
 
-@keyframes routeName {
-
-  30%,
-  70% {
-    opacity: 1;
-  }
-}
-
 @keyframes pageReveal {
   from {
     opacity: 0;
@@ -1187,15 +1278,21 @@ h2 {
   }
 }
 
+@keyframes theme-circle-reveal {
+  to {
+    clip-path: circle(var(--theme-radius, 100vmax) at var(--theme-x, 50vw) var(--theme-y, 50vh));
+  }
+}
+
 @keyframes portraitObjectFloat {
 
   0%,
   100% {
-    transform: translate3d(0, 2%, 0) scale(1.08);
+    transform: translate3d(0, 0, 0);
   }
 
   50% {
-    transform: translate3d(0, calc(2% - 5px), 0) scale(1.08);
+    transform: translate3d(0, -5px, 0);
   }
 }
 
@@ -1378,7 +1475,7 @@ h2 {
     font-size: 0.66rem;
   }
 
-  .portrait-viewport img {
+  .portrait-image-scale {
     transform: translate3d(0, 2%, 0) scale(1.07);
   }
 
@@ -1500,7 +1597,16 @@ h2 {
     transform: none;
   }
 
-  .portrait-viewport img {
+  .portrait-float {
+    animation: none;
+  }
+
+  .portrait-tracking,
+  .portrait-marker {
+    transform: none !important;
+  }
+
+  ::view-transition-new(root) {
     animation: none;
   }
 }

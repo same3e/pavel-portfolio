@@ -2,14 +2,29 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { contact, navigation, site } from "@/content/portfolio";
+
+type ViewTransitionHandle = {
+  finished: Promise<void>;
+  ready: Promise<void>;
+  updateCallbackDone: Promise<void>;
+  skipTransition: () => void;
+};
+
+type DocumentWithViewTransition = Document & {
+  startViewTransition?: (updateCallback: () => void) => ViewTransitionHandle;
+};
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [themeTransitioning, setThemeTransitioning] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const themeButtonRef = useRef<HTMLButtonElement>(null);
+  const themeTransitioningRef = useRef(false);
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("theme");
@@ -72,11 +87,49 @@ export function Header() {
     };
   }, [menuOpen]);
 
-  function toggleTheme() {
-    const nextTheme = theme === "dark" ? "light" : "dark";
+  function applyTheme(nextTheme: "light" | "dark") {
     setTheme(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     window.localStorage.setItem("theme", nextTheme);
+  }
+
+  function toggleTheme() {
+    if (themeTransitioningRef.current) {
+      return;
+    }
+
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    const button = themeButtonRef.current;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const documentWithTransition = document as DocumentWithViewTransition;
+
+    if (!button || reduceMotion || !documentWithTransition.startViewTransition) {
+      applyTheme(nextTheme);
+      return;
+    }
+
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    document.documentElement.style.setProperty("--theme-x", `${x}px`);
+    document.documentElement.style.setProperty("--theme-y", `${y}px`);
+    document.documentElement.style.setProperty("--theme-radius", `${radius}px`);
+
+    themeTransitioningRef.current = true;
+    setThemeTransitioning(true);
+    const transition = documentWithTransition.startViewTransition(() => {
+      flushSync(() => applyTheme(nextTheme));
+    });
+
+    transition.finished.finally(() => {
+      themeTransitioningRef.current = false;
+      setThemeTransitioning(false);
+    });
   }
 
   function closeMenu() {
@@ -102,9 +155,11 @@ export function Header() {
           {site.availability}
         </div>
         <button
+          ref={themeButtonRef}
           className="theme-toggle"
           type="button"
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          disabled={themeTransitioning}
           onClick={toggleTheme}
         >
           <span className="theme-icon theme-icon-sun" aria-hidden="true" />

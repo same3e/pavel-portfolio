@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
+import { HeroPortrait } from "@/components/HeroPortrait";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { SelectedWork } from "@/components/SelectedWork";
 import { SplitRevealText } from "@/components/SplitRevealText";
@@ -33,26 +34,7 @@ export default function Home() {
 
           <SplitRevealText as="h1" className="masked-title" ariaLabel={hero.aria} lines={hero.lines} mode="load" />
 
-          <div className="hero-portrait-frame" aria-label="Voxel portrait render preview">
-            <div className="portrait-frame-header">
-              <span>PORTRAIT_01</span>
-              <span>OBJ / 001</span>
-            </div>
-            <div className="portrait-viewport">
-              <Image
-                src="/hero.png"
-                alt="Voxel portrait of Pavel Kostin"
-                fill
-                priority
-                quality={100}
-                sizes="(max-width: 768px) 88vw, (max-width: 1200px) 38vw, 620px"
-              />
-            </div>
-            <div className="portrait-frame-footer">
-              <span>1254 x 1254</span>
-              <span><i aria-hidden="true" />RENDER ACTIVE</span>
-            </div>
-          </div>
+          <HeroPortrait />
 
           <div className="hero-subtitle">
             <p>{hero.subtitle}</p>
@@ -75,7 +57,7 @@ export default function Home() {
               ariaLabel="Every project starts as a business problem, not a template — website, booking flow or a small automation that saves you hours each week."
               lines={[
                 "Every project starts as a business problem, not a template —",
-                "website, booking flow or a small automation that saves you hours each week."
+                "website, booking flow or a small automation that saves you hours each week"
               ]}
               mode="scroll"
             />
@@ -113,7 +95,7 @@ export default function Home() {
           <div>
             <SplitRevealText
               as="h2"
-              ariaLabel="LET'S MAKE SOMETHING MEMORABLE."
+              ariaLabel="LET'S MAKE SOMETHING MEMORABLE"
               lines={["LET'S MAKE", "SOMETHING", "MEMORABLE"]}
               mode="scroll"
             />

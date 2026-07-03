@@ -124,7 +124,7 @@ export function ProjectCase({ project }: { project: Project }) {
           <div>
             <SplitRevealText
               as="h2"
-              ariaLabel="LET'S MAKE SOMETHING MEMORABLE."
+              ariaLabel="LET'S MAKE SOMETHING MEMORABLE"
               lines={["LET'S MAKE", "SOMETHING", "MEMORABLE"]}
               mode="scroll"
             />
