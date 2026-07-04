@@ -5,7 +5,6 @@ import { CursorScrubVideo } from "@/components/CursorScrubVideo";
 
 export function HeroPortrait() {
   const [isTracking, setIsTracking] = useState(false);
-  const [isRenderReady, setIsRenderReady] = useState(false);
 
   return (
     <div
@@ -23,7 +22,6 @@ export function HeroPortrait() {
           darkSrc="/videos/portrait-dark.mp4"
           lightSrc="/videos/portrait-light.mp4"
           onTrackingChange={setIsTracking}
-          onReadyChange={setIsRenderReady}
         />
       </div>
 
@@ -31,7 +29,7 @@ export function HeroPortrait() {
         <span>1254 x 1254</span>
         <span>
           <i aria-hidden="true" />
-          {isRenderReady ? "RENDER ACTIVE" : "LOADING RENDER"}
+          {isTracking ? "SUBJECT TRACKING" : "RENDER ACTIVE"}
         </span>
       </div>
     </div>
