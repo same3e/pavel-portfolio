@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { useMotionShell } from "@/components/MotionShell";
+import { ProjectShowcase } from "@/components/ProjectShowcase";
 import { SplitRevealText } from "@/components/SplitRevealText";
 import { contact, Project, projects } from "@/content/portfolio";
 
@@ -16,11 +17,46 @@ function MetaItem({ label, value }: { label: string; value: string }) {
   );
 }
 
+function CaseDetails({ project }: { project: Project }) {
+  return (
+    <section className="case-details section-grid">
+      <article>
+        <span>Visual system</span>
+        <p>{project.visualSystem}</p>
+      </article>
+      <article>
+        <span>Typography</span>
+        <p>{project.typography}</p>
+      </article>
+      <article>
+        <span>Motion</span>
+        <p>{project.motion}</p>
+      </article>
+    </section>
+  );
+}
+
+function CaseSolution({ project }: { project: Project }) {
+  return (
+    <section className="case-solution section-grid">
+      <div>
+        <span>Context</span>
+        <SplitRevealText as="p" ariaLabel={project.context} text={project.context} mode="scroll" />
+      </div>
+      <div>
+        <span>Direction</span>
+        <SplitRevealText as="p" ariaLabel={project.direction} text={project.direction} mode="scroll" />
+      </div>
+    </section>
+  );
+}
+
 export function ProjectCase({ project }: { project: Project }) {
   const { openProject } = useMotionShell();
   const currentIndex = projects.findIndex((item) => item.id === project.id);
   const nextProject = projects[(currentIndex + 1) % projects.length];
   const desktopImage = project.desktopImage ?? project.previewImage;
+  const hasShowcase = Boolean(project.desktopShowcase || project.mobileShowcase);
 
   function openNext(event: React.MouseEvent<HTMLAnchorElement>) {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
@@ -51,7 +87,7 @@ export function ProjectCase({ project }: { project: Project }) {
         </section>
 
         <section
-          className={`case-media section-grid ${project.mobileImage ? "has-mobile" : "single-media"}`}
+          className={`case-media case-preview-media section-grid ${project.mobileImage ? "has-mobile" : "single-media"}`}
           aria-label={`${project.title} website previews`}
         >
           <div className="case-desktop preview-media">
@@ -82,31 +118,38 @@ export function ProjectCase({ project }: { project: Project }) {
           ) : null}
         </section>
 
-        <section className="case-details section-grid">
-          <article>
-            <span>Visual system</span>
-            <p>{project.visualSystem}</p>
-          </article>
-          <article>
-            <span>Typography</span>
-            <p>{project.typography}</p>
-          </article>
-          <article>
-            <span>Motion</span>
-            <p>{project.motion}</p>
-          </article>
-        </section>
+        {hasShowcase ? (
+          <>
+            <CaseSolution project={project} />
 
-        <section className="case-solution section-grid">
-          <div>
-            <span>Context</span>
-            <SplitRevealText as="p" ariaLabel={project.context} text={project.context} mode="scroll" />
-          </div>
-          <div>
-            <span>Direction</span>
-            <SplitRevealText as="p" ariaLabel={project.direction} text={project.direction} mode="scroll" />
-          </div>
-        </section>
+            {project.desktopShowcase ? (
+              <ProjectShowcase
+                showcase={project.desktopShowcase}
+                variant="desktop"
+                hideHeader
+                hideCaptions
+                interludeAfterIndex={1}
+                interludeText={project.mobileShowcase?.description}
+              />
+            ) : null}
+
+            {project.mobileShowcase ? (
+              <>
+                <p className="project-showcase__statement project-showcase__statement--before-mobile">
+                  {project.mobileShowcase.title}
+                </p>
+                <ProjectShowcase showcase={project.mobileShowcase} variant="mobile" hideHeader hideCaptions />
+              </>
+            ) : null}
+
+            <CaseDetails project={project} />
+          </>
+        ) : (
+          <>
+            <CaseDetails project={project} />
+            <CaseSolution project={project} />
+          </>
+        )}
 
         <section className="case-cta section-grid">
           <h2>{project.title}</h2>

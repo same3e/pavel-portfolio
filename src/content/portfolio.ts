@@ -54,6 +54,22 @@ export const homepageServices = [
 export const aboutCopy =
   "Independent web designer and developer based in Tbilisi, creating clear websites, booking flows and lightweight digital tools for service businesses";
 
+export type ProjectScreen = {
+  src: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+};
+
+export type ProjectShowcase = {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  screens: ProjectScreen[];
+  placeholderCount?: number;
+};
+
 export type Project = {
   id: "thai-nari" | "pavel-portfolio";
   title: string;
@@ -74,6 +90,8 @@ export type Project = {
   desktopImage?: string;
   mobileImage?: string;
   ogImage?: string;
+  desktopShowcase?: ProjectShowcase;
+  mobileShowcase?: ProjectShowcase;
   alt: string;
   seoTitle: string;
   seoDescription: string;
@@ -105,6 +123,64 @@ export const projects = [
     liveUrl: "https://thai-sooty.vercel.app/",
     // TODO: add real screenshots when available: /projects/thai-nari/desktop.webp and /projects/thai-nari/mobile.webp.
     previewImage: "/projects/thai-nari/preview.webp",
+    desktopShowcase: {
+      eyebrow: "Desktop experience",
+      title: "A calm digital journey through rituals, space and booking.",
+      description:
+        "Editorial compositions, immersive imagery and clear booking actions guide visitors through the complete Thai Nari experience.",
+      screens: [
+        {
+          src: "/projects/thai-nari/dekstop1.jpg",
+          alt: "Thai Nari desktop website interface",
+          caption: "Services & Rituals",
+          width: 1891,
+          height: 941
+        },
+        {
+          src: "/projects/thai-nari/dekstop2.jpg",
+          alt: "Thai Nari desktop wellness programs interface",
+          caption: "Program Discovery",
+          width: 1889,
+          height: 951
+        },
+        {
+          src: "/projects/thai-nari/dekstop3.jpg",
+          alt: "Thai Nari desktop atmosphere and editorial content",
+          caption: "Atmosphere & Story",
+          width: 1887,
+          height: 943
+        }
+      ]
+    },
+    mobileShowcase: {
+      eyebrow: "Mobile experience",
+      title: "The same atmosphere, rebuilt for a smaller screen.",
+      description:
+        "The responsive experience preserves the visual identity while keeping content, services and booking actions easy to reach.",
+      screens: [
+        {
+          src: "/projects/thai-nari/mobile1.png",
+          alt: "Thai Nari mobile homepage presented inside an iPhone",
+          caption: "Mobile Hero",
+          width: 1122,
+          height: 1402
+        },
+        {
+          src: "/projects/thai-nari/mobile2.png",
+          alt: "Thai Nari mobile editorial and story section presented inside an iPhone",
+          caption: "Story & Atmosphere",
+          width: 1122,
+          height: 1402
+        },
+        {
+          src: "/projects/thai-nari/mobile3.png",
+          alt: "Thai Nari mobile service and booking interface presented inside an iPhone",
+          caption: "Service & Booking",
+          width: 1122,
+          height: 1402
+        }
+      ]
+    },
     alt: "Thai Nari website preview",
     seoTitle: "Thai Nari - SPA Website Case Study | Pavel Kostin",
     seoDescription: "Design and development of a responsive website concept for a Thai wellness studio."
@@ -134,6 +210,44 @@ export const projects = [
     liveUrl: "https://pavel-portfolio-six.vercel.app/",
     // TODO: add real screenshots when available: /projects/pavel-portfolio/desktop.webp and /projects/pavel-portfolio/mobile.webp.
     previewImage: "/projects/pavel-portfolio/preview.webp",
+    desktopShowcase: {
+      eyebrow: "Desktop experience",
+      title: "An editorial portfolio system built around project clarity.",
+      description:
+        "Large display typography, precise spacing and restrained motion make the portfolio feel direct without losing its visual identity.",
+      screens: [
+        {
+          src: "/projects/pavel-portfolio/desktop1.jpg",
+          alt: "Pavel Portfolio desktop homepage interface",
+          caption: "Homepage System",
+          width: 1904,
+          height: 936
+        },
+        {
+          src: "/projects/pavel-portfolio/desktop2.jpg",
+          alt: "Pavel Portfolio desktop selected work section",
+          caption: "Selected Work",
+          width: 1903,
+          height: 928
+        },
+        {
+          src: "/projects/pavel-portfolio/desktop3.jpg",
+          alt: "Pavel Portfolio desktop contact and conversion section",
+          caption: "Contact Flow",
+          width: 1904,
+          height: 937
+        }
+      ]
+    },
+    mobileShowcase: {
+      eyebrow: "Mobile experience",
+      title: "The same editorial system, tightened for smaller screens.",
+      description:
+        "The responsive experience keeps the portfolio's editorial rhythm readable while keeping work, services and contact actions close at hand.",
+      screens: [],
+      // TODO: replace placeholders with real mobile screenshots: /projects/pavel-portfolio/mobile1.png, mobile2.png and mobile3.png.
+      placeholderCount: 3
+    },
     alt: "Pavel Portfolio homepage preview",
     seoTitle: "Pavel Portfolio - Web Design Case Study | Pavel Kostin",
     seoDescription: "Design and development of an editorial personal portfolio for an independent web designer."
