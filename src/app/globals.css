@@ -120,7 +120,7 @@ p {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 80;
   display: grid;
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
@@ -129,6 +129,49 @@ p {
   margin: 0 auto;
   padding: 14px 0;
   color: var(--text);
+  isolation: isolate;
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  z-index: 0;
+  width: 100vw;
+  height: calc(100% + 46px);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.14) 0%,
+    rgba(0, 0, 0, 0.1) 46%,
+    rgba(0, 0, 0, 0.04) 76%,
+    transparent 100%
+  );
+  -webkit-backdrop-filter: blur(15px) saturate(0.9) brightness(0.9);
+  backdrop-filter: blur(15px) saturate(0.9) brightness(0.9);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 43%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.26) 86%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 43%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.26) 86%,
+    transparent 100%
+  );
+  transform: translateX(-50%);
+}
+
+.site-header>* {
+  position: relative;
+  z-index: 1;
 }
 
 .brand,
@@ -272,7 +315,7 @@ p {
 .mobile-menu {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 90;
   display: grid;
   align-content: center;
   padding: 88px var(--gutter) 44px;
@@ -487,18 +530,6 @@ p {
 .cursor-frame-sequence__canvas {
   opacity: 0;
   transition: opacity 180ms ease;
-}
-
-.darkEmbeddedLogoCover {
-  position: absolute;
-  left: 81.5%;
-  top: 96.2%;
-  z-index: 5;
-  width: clamp(22px, 2.2vw, 32px);
-  height: clamp(26px, 2.8vw, 38px);
-  background: #000;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
 }
 
 .cursor-frame-sequence[data-ready="true"] .cursor-frame-sequence__canvas {
@@ -982,6 +1013,7 @@ h2 {
   width: 100%;
   margin: 0 auto;
   padding: 34px max(var(--gutter), calc((100% - var(--max)) / 2));
+  border-top: 1px solid color-mix(in srgb, var(--accent-contrast) 28%, transparent);
   background: var(--accent);
   color: var(--accent-contrast);
 }
@@ -1118,26 +1150,31 @@ html.has-magnetic-cursor .magnetic-cursor {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  overflow: hidden;
 }
 
 .route-transition-column {
+  justify-self: stretch;
+  width: calc(100% + 2px);
   background: var(--dark);
-  transform: scaleY(0);
+  box-shadow: 0 0 0 1px var(--dark);
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0) scaleY(0);
   transform-origin: bottom;
 }
 
 .route-transition--covering .route-transition-column {
-  transform: scaleY(1);
+  transform: translate3d(0, 0, 0) scaleY(1);
   transition: transform 500ms cubic-bezier(0.76, 0, 0.24, 1) var(--column-delay);
 }
 
 .route-transition--covered .route-transition-column {
-  transform: scaleY(1);
+  transform: translate3d(0, 0, 0) scaleY(1);
 }
 
 .route-transition--revealing .route-transition-column {
-  transform: scaleY(0);
+  transform: translate3d(0, 0, 0) scaleY(0);
   transform-origin: top;
   transition: transform 620ms cubic-bezier(0.76, 0, 0.24, 1) var(--column-reverse-delay);
 }
@@ -1567,6 +1604,36 @@ html.has-magnetic-cursor .magnetic-cursor {
   .site-header {
     grid-template-columns: auto 1fr auto;
     padding: 12px 0;
+  }
+
+  .site-header::before {
+    top: -8px;
+    height: calc(100% + 30px);
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.14) 0%,
+      rgba(0, 0, 0, 0.09) 48%,
+      rgba(0, 0, 0, 0.03) 78%,
+      transparent 100%
+    );
+    -webkit-backdrop-filter: blur(12px) saturate(0.92) brightness(0.9);
+    backdrop-filter: blur(12px) saturate(0.92) brightness(0.9);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 48%,
+      rgba(0, 0, 0, 0.66) 72%,
+      rgba(0, 0, 0, 0.2) 88%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 48%,
+      rgba(0, 0, 0, 0.66) 72%,
+      rgba(0, 0, 0, 0.2) 88%,
+      transparent 100%
+    );
   }
 
   .desktop-nav,

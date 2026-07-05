@@ -568,7 +568,6 @@ export function CursorScrubFrameSequence({
           onDragStart={(event) => event.preventDefault()}
         />
         <canvas className="cursor-frame-sequence__canvas" ref={canvasRef} aria-hidden="true" />
-        <span className="darkEmbeddedLogoCover" aria-hidden="true" />
       </div>
     </div>
   );

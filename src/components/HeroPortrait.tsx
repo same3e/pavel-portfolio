@@ -11,7 +11,7 @@ const portraitFrameSequence = {
 
 const portraitSequence = {
   ...portraitFrameSequence,
-  basePath: "/videos/frames"
+  basePath: "/videos/portrait-clean-frames"
 } as const;
 
 export function HeroPortrait() {
