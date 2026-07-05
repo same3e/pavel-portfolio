@@ -45,6 +45,7 @@ npm run build
 - `src/components` - header, footer, selected work, project case and route motion.
 - `src/content/portfolio.ts` - portfolio copy, contact links, services and project data.
 - `public/projects` - project preview assets.
+- `public/videos/portrait-*-frames` - generated hero portrait frame sequences.
 
 ## Content Updates
 
@@ -76,6 +77,22 @@ Current remaining asset TODOs:
 - `public/projects/pavel-portfolio/mobile.webp`
 
 Do not reuse a desktop crop as a mobile screenshot. If a real mobile screenshot is missing, leave `mobileImage` undefined so the mobile preview block stays hidden.
+
+## Hero Frame Sequence
+
+The homepage portrait scrub uses generated WebP frame sequences instead of seeking MP4 files at runtime:
+
+- `public/videos/portrait-dark-frames/frame-000.webp` through `frame-110.webp`
+- `public/videos/portrait-light-frames/frame-000.webp` through `frame-110.webp`
+
+The source MP4 files remain in `public/videos`. The current sequence was generated from `0.4s` onward at `24fps`, `960 x 960`, WebP quality `76`.
+
+Regeneration command:
+
+```bash
+ffmpeg -y -ss 0.4 -i public/videos/portrait-light.mp4 -an -vf "fps=24,scale=960:960:flags=lanczos" -c:v libwebp -start_number 0 -compression_level 6 -q:v 76 public/videos/portrait-light-frames/frame-%03d.webp
+ffmpeg -y -ss 0.4 -i public/videos/portrait-dark.mp4 -an -vf "fps=24,scale=960:960:flags=lanczos" -c:v libwebp -start_number 0 -compression_level 6 -q:v 76 public/videos/portrait-dark-frames/frame-%03d.webp
+```
 
 ## Vercel Deployment
 

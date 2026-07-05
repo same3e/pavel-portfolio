@@ -1,7 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { CursorScrubVideo } from "@/components/CursorScrubVideo";
+import { CursorScrubFrameSequence } from "@/components/CursorScrubFrameSequence";
+
+const portraitFrameSequence = {
+  frameCount: 111,
+  extension: "webp",
+  pad: 3
+} as const;
+
+const darkPortraitSequence = {
+  ...portraitFrameSequence,
+  basePath: "/videos/portrait-dark-frames"
+} as const;
+
+const lightPortraitSequence = {
+  ...portraitFrameSequence,
+  basePath: "/videos/portrait-light-frames"
+} as const;
 
 export function HeroPortrait() {
   const [isTracking, setIsTracking] = useState(false);
@@ -18,9 +34,9 @@ export function HeroPortrait() {
       </div>
 
       <div className="portrait-viewport">
-        <CursorScrubVideo
-          darkSrc="/videos/portrait-dark.mp4"
-          lightSrc="/videos/portrait-light.mp4"
+        <CursorScrubFrameSequence
+          darkSequence={darkPortraitSequence}
+          lightSequence={lightPortraitSequence}
           onTrackingChange={setIsTracking}
         />
       </div>

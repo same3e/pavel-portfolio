@@ -2,17 +2,23 @@
 
 import { useEffect, useRef } from "react";
 
-type CursorScrubVideoProps = {
-  darkSrc: string;
-  lightSrc: string;
+type FrameSequence = {
+  basePath: string;
+  frameCount: number;
+  extension?: string;
+  pad?: number;
+};
+
+type CursorScrubFrameSequenceProps = {
+  darkSequence: FrameSequence;
+  lightSequence: FrameSequence;
   className?: string;
   onTrackingChange?: (isTracking: boolean) => void;
 };
 
-type VideoTheme = "dark" | "light";
+type SequenceTheme = "dark" | "light";
 
 const CENTER_PROGRESS = 0.5;
-const START_OFFSET = 0.4;
 const INTERPOLATION = 0.3;
 const PROGRESS_EPSILON = 0.002;
 
@@ -20,32 +26,56 @@ function clamp(value: number, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getTargetTime(progress: number, duration: number) {
-  const start = Math.min(START_OFFSET, duration);
-  const usableDuration = Math.max(0, duration - start);
-
-  return start + clamp(progress) * usableDuration;
+function getFrameIndex(progress: number, frameCount: number) {
+  return Math.round(clamp(progress) * Math.max(frameCount - 1, 0));
 }
 
-export function CursorScrubVideo({
-  darkSrc,
-  lightSrc,
+function getFrameSrc(sequence: FrameSequence, index: number) {
+  const extension = sequence.extension ?? "webp";
+  const pad = sequence.pad ?? 3;
+  const paddedIndex = String(index).padStart(pad, "0");
+
+  return `${sequence.basePath}/frame-${paddedIndex}.${extension}`;
+}
+
+function getPreloadOrder(frameCount: number, startIndex: number) {
+  const order = [startIndex];
+
+  for (let offset = 1; order.length < frameCount; offset += 1) {
+    const left = startIndex - offset;
+    const right = startIndex + offset;
+
+    if (left >= 0) {
+      order.push(left);
+    }
+
+    if (right < frameCount) {
+      order.push(right);
+    }
+  }
+
+  return order;
+}
+
+export function CursorScrubFrameSequence({
+  darkSequence,
+  lightSequence,
   className,
   onTrackingChange
-}: CursorScrubVideoProps) {
+}: CursorScrubFrameSequenceProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const darkVideoRef = useRef<HTMLVideoElement | null>(null);
-  const lightVideoRef = useRef<HTMLVideoElement | null>(null);
+  const darkImageRef = useRef<HTMLImageElement | null>(null);
+  const lightImageRef = useRef<HTMLImageElement | null>(null);
   const targetProgressRef = useRef(CENTER_PROGRESS);
   const currentProgressRef = useRef(CENTER_PROGRESS);
   const animationFrameRef = useRef<number | null>(null);
-  const metadataReadyRef = useRef<Record<VideoTheme, boolean>>({ dark: false, light: false });
-  const loadFailedRef = useRef<Record<VideoTheme, boolean>>({ dark: false, light: false });
-  const durationRef = useRef<Record<VideoTheme, number>>({ dark: 0, light: 0 });
+  const initialReadyRef = useRef<Record<SequenceTheme, boolean>>({ dark: false, light: false });
+  const loadFailedRef = useRef<Record<SequenceTheme, boolean>>({ dark: false, light: false });
   const reducedMotionRef = useRef(false);
   const finePointerRef = useRef(false);
   const draggingRef = useRef(false);
   const trackingRef = useRef(false);
+  const preloadedImagesRef = useRef<HTMLImageElement[]>([]);
   const onTrackingChangeRef = useRef(onTrackingChange);
 
   useEffect(() => {
@@ -54,17 +84,21 @@ export function CursorScrubVideo({
 
   useEffect(() => {
     const root = rootRef.current;
-    const darkVideo = darkVideoRef.current;
-    const lightVideo = lightVideoRef.current;
+    const darkImage = darkImageRef.current;
+    const lightImage = lightImageRef.current;
 
-    if (!root || !darkVideo || !lightVideo) {
+    if (!root || !darkImage || !lightImage) {
       return;
     }
 
     const rootElement: HTMLDivElement = root;
-    const videoElements: Record<VideoTheme, HTMLVideoElement> = {
-      dark: darkVideo,
-      light: lightVideo
+    const imageElements: Record<SequenceTheme, HTMLImageElement> = {
+      dark: darkImage,
+      light: lightImage
+    };
+    const sequences: Record<SequenceTheme, FrameSequence> = {
+      dark: darkSequence,
+      light: lightSequence
     };
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -87,45 +121,40 @@ export function CursorScrubVideo({
       }
     }
 
-    function setVideoTime(video: HTMLVideoElement, time: number) {
-      try {
-        video.currentTime = time;
-      } catch {
-        // Some browsers reject seeks before enough metadata is available.
-      }
+    function hasReadyImage() {
+      return initialReadyRef.current.dark || initialReadyRef.current.light;
     }
 
-    function hasReadyVideo() {
-      return metadataReadyRef.current.dark || metadataReadyRef.current.light;
-    }
-
-    function allVideosSettled() {
+    function allInitialImagesSettled() {
       return (
-        (metadataReadyRef.current.dark || loadFailedRef.current.dark) &&
-        (metadataReadyRef.current.light || loadFailedRef.current.light)
+        (initialReadyRef.current.dark || loadFailedRef.current.dark) &&
+        (initialReadyRef.current.light || loadFailedRef.current.light)
       );
     }
 
     function revealIfSettled() {
-      if (allVideosSettled()) {
+      if (allInitialImagesSettled()) {
         rootElement.dataset.ready = "true";
       }
     }
 
-    function syncVideoToProgress(theme: VideoTheme, progress: number) {
-      if (!metadataReadyRef.current[theme]) {
+    function setImageFrame(theme: SequenceTheme, progress: number) {
+      const image = imageElements[theme];
+      const sequence = sequences[theme];
+      const frameIndex = getFrameIndex(progress, sequence.frameCount);
+      const frameKey = String(frameIndex);
+
+      if (image.dataset.frameIndex === frameKey) {
         return;
       }
 
-      const video = videoElements[theme];
-      const duration = durationRef.current[theme];
-      setVideoTime(video, getTargetTime(progress, duration));
-      video.pause();
+      image.dataset.frameIndex = frameKey;
+      image.src = getFrameSrc(sequence, frameIndex);
     }
 
-    function syncAllVideosToProgress(progress: number) {
-      syncVideoToProgress("dark", progress);
-      syncVideoToProgress("light", progress);
+    function syncAllImagesToProgress(progress: number) {
+      setImageFrame("dark", progress);
+      setImageFrame("light", progress);
     }
 
     function centerImmediately() {
@@ -133,13 +162,13 @@ export function CursorScrubVideo({
       targetProgressRef.current = CENTER_PROGRESS;
       currentProgressRef.current = CENTER_PROGRESS;
       setTracking(false);
-      syncAllVideosToProgress(CENTER_PROGRESS);
+      syncAllImagesToProgress(CENTER_PROGRESS);
     }
 
     function runTimelineStep() {
       animationFrameRef.current = null;
 
-      if (reducedMotionRef.current || !hasReadyVideo()) {
+      if (reducedMotionRef.current || !hasReadyImage()) {
         return;
       }
 
@@ -152,7 +181,7 @@ export function CursorScrubVideo({
           : currentProgress + delta * INTERPOLATION;
 
       currentProgressRef.current = nextProgress;
-      syncAllVideosToProgress(nextProgress);
+      syncAllImagesToProgress(nextProgress);
 
       if (Math.abs(targetProgress - nextProgress) > PROGRESS_EPSILON) {
         animationFrameRef.current = window.requestAnimationFrame(runTimelineStep);
@@ -160,7 +189,7 @@ export function CursorScrubVideo({
     }
 
     function scheduleTimelineStep() {
-      if (reducedMotionRef.current || !hasReadyVideo()) {
+      if (reducedMotionRef.current || !hasReadyImage()) {
         return;
       }
 
@@ -191,40 +220,35 @@ export function CursorScrubVideo({
       setTargetProgress(CENTER_PROGRESS);
     }
 
-    function handleLoadedMetadata(theme: VideoTheme) {
-      const video = videoElements[theme];
-      const duration = Number.isFinite(video.duration) ? video.duration : 0;
-      durationRef.current[theme] = duration;
-      metadataReadyRef.current[theme] = duration > 0;
-      video.pause();
+    function handleImageLoad(theme: SequenceTheme) {
+      initialReadyRef.current[theme] = true;
+      revealIfSettled();
+    }
 
-      if (duration <= 0) {
-        loadFailedRef.current[theme] = true;
-        revealIfSettled();
+    function handleImageError(theme: SequenceTheme) {
+      loadFailedRef.current[theme] = true;
+      revealIfSettled();
+    }
+
+    function preloadSequence(sequence: FrameSequence) {
+      const startIndex = getFrameIndex(CENTER_PROGRESS, sequence.frameCount);
+      const order = getPreloadOrder(sequence.frameCount, startIndex);
+
+      for (const frameIndex of order) {
+        const image = new window.Image();
+        image.decoding = "async";
+        image.src = getFrameSrc(sequence, frameIndex);
+        preloadedImagesRef.current.push(image);
+      }
+    }
+
+    function preloadFramesIfNeeded() {
+      if (reducedMotionRef.current || preloadedImagesRef.current.length > 0) {
         return;
       }
 
-      syncVideoToProgress(theme, currentProgressRef.current);
-
-      if (reducedMotionRef.current) {
-        targetProgressRef.current = CENTER_PROGRESS;
-        currentProgressRef.current = CENTER_PROGRESS;
-        syncVideoToProgress(theme, CENTER_PROGRESS);
-      }
-
-      revealIfSettled();
-    }
-
-    function handleVideoPlay(event: Event) {
-      const video = event.currentTarget;
-      if (video instanceof HTMLVideoElement) {
-        video.pause();
-      }
-    }
-
-    function handleVideoError(theme: VideoTheme) {
-      loadFailedRef.current[theme] = true;
-      revealIfSettled();
+      preloadSequence(darkSequence);
+      preloadSequence(lightSequence);
     }
 
     function handleWindowPointerMove(event: PointerEvent) {
@@ -232,6 +256,7 @@ export function CursorScrubVideo({
         return;
       }
 
+      preloadFramesIfNeeded();
       setTracking(true);
       setTargetFromViewport(event.clientX);
     }
@@ -251,6 +276,7 @@ export function CursorScrubVideo({
         return;
       }
 
+      preloadFramesIfNeeded();
       draggingRef.current = true;
       setTracking(true);
       setTargetFromFrame(event.clientX);
@@ -290,38 +316,38 @@ export function CursorScrubVideo({
       reducedMotionRef.current = reducedMotionQuery.matches;
       finePointerRef.current = finePointerQuery.matches;
 
-      if (reducedMotionRef.current || !finePointerRef.current) {
-        returnToCenter();
-      }
-
       if (reducedMotionRef.current) {
         centerImmediately();
+        return;
+      }
+
+      if (!finePointerRef.current) {
+        returnToCenter();
       }
     }
 
-    const darkMetadataHandler = () => handleLoadedMetadata("dark");
-    const lightMetadataHandler = () => handleLoadedMetadata("light");
-    const darkErrorHandler = () => handleVideoError("dark");
-    const lightErrorHandler = () => handleVideoError("light");
+    const darkLoadHandler = () => handleImageLoad("dark");
+    const lightLoadHandler = () => handleImageLoad("light");
+    const darkErrorHandler = () => handleImageError("dark");
+    const lightErrorHandler = () => handleImageError("light");
 
     syncMotionPreferences();
 
-    for (const video of Object.values(videoElements)) {
-      video.pause();
-      video.addEventListener("play", handleVideoPlay);
+    if (finePointerRef.current && !reducedMotionRef.current) {
+      preloadFramesIfNeeded();
     }
 
-    darkVideo.addEventListener("loadedmetadata", darkMetadataHandler);
-    darkVideo.addEventListener("error", darkErrorHandler);
-    lightVideo.addEventListener("loadedmetadata", lightMetadataHandler);
-    lightVideo.addEventListener("error", lightErrorHandler);
+    darkImage.addEventListener("load", darkLoadHandler);
+    darkImage.addEventListener("error", darkErrorHandler);
+    lightImage.addEventListener("load", lightLoadHandler);
+    lightImage.addEventListener("error", lightErrorHandler);
 
-    if (darkVideo.readyState >= 1) {
-      handleLoadedMetadata("dark");
+    if (darkImage.complete && darkImage.naturalWidth > 0) {
+      handleImageLoad("dark");
     }
 
-    if (lightVideo.readyState >= 1) {
-      handleLoadedMetadata("light");
+    if (lightImage.complete && lightImage.naturalWidth > 0) {
+      handleImageLoad("light");
     }
 
     window.addEventListener("pointermove", handleWindowPointerMove, { passive: true });
@@ -336,15 +362,11 @@ export function CursorScrubVideo({
 
     return () => {
       cancelAnimationFrameIfNeeded();
-      for (const video of Object.values(videoElements)) {
-        video.pause();
-        video.removeEventListener("play", handleVideoPlay);
-      }
-
-      darkVideo.removeEventListener("loadedmetadata", darkMetadataHandler);
-      darkVideo.removeEventListener("error", darkErrorHandler);
-      lightVideo.removeEventListener("loadedmetadata", lightMetadataHandler);
-      lightVideo.removeEventListener("error", lightErrorHandler);
+      preloadedImagesRef.current = [];
+      darkImage.removeEventListener("load", darkLoadHandler);
+      darkImage.removeEventListener("error", darkErrorHandler);
+      lightImage.removeEventListener("load", lightLoadHandler);
+      lightImage.removeEventListener("error", lightErrorHandler);
       window.removeEventListener("pointermove", handleWindowPointerMove);
       window.removeEventListener("pointerout", handleWindowPointerOut);
       window.removeEventListener("blur", handleWindowBlur);
@@ -355,36 +377,39 @@ export function CursorScrubVideo({
       reducedMotionQuery.removeEventListener("change", syncMotionPreferences);
       finePointerQuery.removeEventListener("change", syncMotionPreferences);
     };
-  }, []);
+  }, [darkSequence, lightSequence]);
+
+  const darkCenterFrame = getFrameIndex(CENTER_PROGRESS, darkSequence.frameCount);
+  const lightCenterFrame = getFrameIndex(CENTER_PROGRESS, lightSequence.frameCount);
 
   return (
-    <div className={`cursor-scrub-video ${className ?? ""}`} ref={rootRef}>
-      <div className="portraitVideoCanvas">
-        <video
-          ref={darkVideoRef}
-          className="portraitVideo portraitVideoDark cursor-scrub-video__media cursor-scrub-video__media--dark"
-          src={darkSrc}
-          preload="auto"
-          playsInline
-          muted
-          disablePictureInPicture
-          controls={false}
-          controlsList="nodownload nofullscreen noremoteplayback"
+    <div className={`cursor-frame-sequence ${className ?? ""}`} ref={rootRef}>
+      <div className="portraitFrameSequenceCanvas">
+        <img
+          ref={darkImageRef}
+          className="portraitFrame portraitFrameDark cursor-frame-sequence__media cursor-frame-sequence__media--dark"
+          src={getFrameSrc(darkSequence, darkCenterFrame)}
+          data-frame-index={darkCenterFrame}
+          width={960}
+          height={960}
+          alt=""
+          loading="eager"
+          decoding="async"
           aria-hidden="true"
           draggable={false}
           onContextMenu={(event) => event.preventDefault()}
           onDragStart={(event) => event.preventDefault()}
         />
-        <video
-          ref={lightVideoRef}
-          className="portraitVideo portraitVideoLight cursor-scrub-video__media cursor-scrub-video__media--light"
-          src={lightSrc}
-          preload="auto"
-          playsInline
-          muted
-          disablePictureInPicture
-          controls={false}
-          controlsList="nodownload nofullscreen noremoteplayback"
+        <img
+          ref={lightImageRef}
+          className="portraitFrame portraitFrameLight cursor-frame-sequence__media cursor-frame-sequence__media--light"
+          src={getFrameSrc(lightSequence, lightCenterFrame)}
+          data-frame-index={lightCenterFrame}
+          width={960}
+          height={960}
+          alt=""
+          loading="eager"
+          decoding="async"
           aria-hidden="true"
           draggable={false}
           onContextMenu={(event) => event.preventDefault()}
