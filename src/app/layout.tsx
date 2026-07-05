@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { IBM_Plex_Mono, Inter_Tight, Pixelify_Sans } from "next/font/google";
 import { MotionShell } from "@/components/MotionShell";
-import { site } from "@/content/portfolio";
+import { defaultLocale, dictionary, getSite, type Locale } from "@/content/portfolio";
 import "./globals.css";
 
 const pixelifySans = Pixelify_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap"
 });
@@ -25,14 +25,14 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.productionUrl),
+  metadataBase: new URL(getSite(defaultLocale).productionUrl),
   title: {
-    default: site.title,
+    default: getSite(defaultLocale).title,
     template: "%s | Pavel Kostin"
   },
-  description: site.description,
-  authors: [{ name: site.name }],
-  creator: site.name,
+  description: getSite(defaultLocale).description,
+  authors: [{ name: getSite(defaultLocale).name }],
+  creator: getSite(defaultLocale).name,
   alternates: {
     canonical: "/"
   },
@@ -54,18 +54,18 @@ export const metadata: Metadata = {
     }
   },
   openGraph: {
-    title: site.title,
-    description: site.description,
+    title: getSite(defaultLocale).title,
+    description: getSite(defaultLocale).description,
     url: "/",
-    siteName: site.name,
+    siteName: getSite(defaultLocale).name,
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${site.name} portfolio` }]
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${getSite(defaultLocale).name} portfolio` }]
   },
   twitter: {
     card: "summary_large_image",
-    title: site.title,
-    description: site.description,
-    creator: site.name,
+    title: getSite(defaultLocale).title,
+    description: getSite(defaultLocale).description,
+    creator: getSite(defaultLocale).name,
     images: ["/opengraph-image"]
   }
 };
@@ -76,16 +76,23 @@ export const viewport: Viewport = {
   initialScale: 1
 };
 
-export default function RootLayout({
+function getLocaleFromPathname(pathname: string): Locale {
+  return pathname === "/ru" || pathname.startsWith("/ru/") ? "ru" : defaultLocale;
+}
+
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  const locale = getLocaleFromPathname(requestHeaders.get("x-pathname") ?? "/");
+
   return (
-    <html lang="en">
+    <html lang={dictionary[locale].htmlLang}>
       <body className={`${pixelifySans.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
         <a className="skip-link" href="#main-content">
-          Skip to content
+          {dictionary[locale].skipLink}
         </a>
         <MotionShell>{children}</MotionShell>
       </body>

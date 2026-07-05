@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/HomePage";
-import { defaultLocale, getAlternateLanguages, getSite } from "@/content/portfolio";
+import { getAlternateLanguages, getSite } from "@/content/portfolio";
 
-const currentSite = getSite(defaultLocale);
+const locale = "ru";
+const currentSite = getSite(locale);
 
 export const metadata: Metadata = {
   title: {
@@ -10,26 +11,26 @@ export const metadata: Metadata = {
   },
   description: currentSite.description,
   alternates: {
-    canonical: "/",
+    canonical: "/ru",
     languages: getAlternateLanguages("/")
   },
   openGraph: {
     title: currentSite.title,
     description: currentSite.description,
-    url: "/",
+    url: "/ru",
     type: "website",
-    locale: "en_US",
-    alternateLocale: ["ru_RU"],
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${currentSite.name} portfolio` }]
+    locale: "ru_RU",
+    alternateLocale: ["en_US"],
+    images: [{ url: "/ru/opengraph-image", width: 1200, height: 630, alt: `${currentSite.name} портфолио` }]
   },
   twitter: {
     card: "summary_large_image",
     title: currentSite.title,
     description: currentSite.description,
-    images: ["/opengraph-image"]
+    images: ["/ru/opengraph-image"]
   }
 };
 
-export default function Home() {
-  return <HomePage locale={defaultLocale} />;
+export default function RussianHome() {
+  return <HomePage locale={locale} />;
 }

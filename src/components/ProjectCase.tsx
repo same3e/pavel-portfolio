@@ -6,7 +6,7 @@ import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { useMotionShell } from "@/components/MotionShell";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
 import { SplitRevealText } from "@/components/SplitRevealText";
-import { contact, Project, projects } from "@/content/portfolio";
+import { contact, dictionary, getProjects, type Locale, type Project } from "@/content/portfolio";
 
 function MetaItem({ label, value }: { label: string; value: string }) {
   return (
@@ -17,42 +17,48 @@ function MetaItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CaseDetails({ project }: { project: Project }) {
+function CaseDetails({ project, locale }: { project: Project; locale: Locale }) {
+  const copy = dictionary[locale];
+
   return (
     <section className="case-details section-grid">
       <article>
-        <span>Visual system</span>
+        <span>{copy.visualSystem}</span>
         <p>{project.visualSystem}</p>
       </article>
       <article>
-        <span>Typography</span>
+        <span>{copy.typography}</span>
         <p>{project.typography}</p>
       </article>
       <article>
-        <span>Motion</span>
+        <span>{copy.motion}</span>
         <p>{project.motion}</p>
       </article>
     </section>
   );
 }
 
-function CaseSolution({ project }: { project: Project }) {
+function CaseSolution({ project, locale }: { project: Project; locale: Locale }) {
+  const copy = dictionary[locale];
+
   return (
     <section className="case-solution section-grid">
       <div>
-        <span>Context</span>
+        <span>{copy.context}</span>
         <SplitRevealText as="p" ariaLabel={project.context} text={project.context} mode="scroll" />
       </div>
       <div>
-        <span>Direction</span>
+        <span>{copy.direction}</span>
         <SplitRevealText as="p" ariaLabel={project.direction} text={project.direction} mode="scroll" />
       </div>
     </section>
   );
 }
 
-export function ProjectCase({ project }: { project: Project }) {
+export function ProjectCase({ project, locale }: { project: Project; locale: Locale }) {
   const { openProject } = useMotionShell();
+  const copy = dictionary[locale];
+  const projects = getProjects(locale);
   const currentIndex = projects.findIndex((item) => item.id === project.id);
   const nextProject = projects[(currentIndex + 1) % projects.length];
   const desktopImage = project.desktopImage ?? project.previewImage;
@@ -69,29 +75,41 @@ export function ProjectCase({ project }: { project: Project }) {
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main className="case-page" id="main-content">
         <section className="case-hero section-grid">
           <h1 className="masked-title case-title">
             <span><i>{project.title}</i></span>
           </h1>
           <p>{project.description}</p>
-          <a className="case-live-mobile text-cta" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-            <LetterSwapText label="Live website ↗" />
+          <a
+            className="case-live-mobile text-cta"
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={copy.liveWebsiteAria}
+          >
+            <LetterSwapText label={`${copy.liveWebsite} ↗`} />
           </a>
           <div className="case-meta">
-            <MetaItem label="Role" value={project.role} />
-            <MetaItem label="Year" value={project.year} />
-            <MetaItem label="Type" value={project.type} />
-            <a className="case-live-meta" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-              <LetterSwapText label="Live website ↗" />
+            <MetaItem label={copy.role} value={project.role} />
+            <MetaItem label={copy.year} value={project.year} />
+            <MetaItem label={copy.type} value={project.type} />
+            <a
+              className="case-live-meta"
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={copy.liveWebsiteAria}
+            >
+              <LetterSwapText label={`${copy.liveWebsite} ↗`} />
             </a>
           </div>
         </section>
 
         <section
           className={`case-media case-preview-media section-grid ${project.mobileImage ? "has-mobile" : "single-media"}`}
-          aria-label={`${project.title} website previews`}
+          aria-label={locale === "en" ? `${project.title} website previews` : `Превью сайта ${project.title}`}
         >
           <div className="case-desktop preview-media">
             <div className="case-image-frame">
@@ -107,7 +125,7 @@ export function ProjectCase({ project }: { project: Project }) {
           </div>
           {project.mobileImage ? (
             <div className="case-phone">
-              <span>Mobile interface</span>
+              <span>{copy.mobileInterface}</span>
               <div>
                 <Image
                   src={project.mobileImage}
@@ -123,7 +141,7 @@ export function ProjectCase({ project }: { project: Project }) {
 
         {hasShowcase ? (
           <>
-            <CaseSolution project={project} />
+            <CaseSolution project={project} locale={locale} />
 
             {project.desktopShowcase ? (
               <ProjectShowcase
@@ -133,6 +151,7 @@ export function ProjectCase({ project }: { project: Project }) {
                 hideCaptions
                 interludeAfterIndex={1}
                 interludeText={project.mobileShowcase?.description}
+                locale={locale}
               />
             ) : null}
 
@@ -141,28 +160,30 @@ export function ProjectCase({ project }: { project: Project }) {
                 <p className="project-showcase__statement project-showcase__statement--before-mobile">
                   {project.mobileShowcase.title}
                 </p>
-                <ProjectShowcase showcase={project.mobileShowcase} variant="mobile" hideHeader hideCaptions />
+                <ProjectShowcase showcase={project.mobileShowcase} variant="mobile" hideHeader hideCaptions locale={locale} />
               </>
             ) : null}
 
-            <CaseDetails project={project} />
+            <CaseDetails project={project} locale={locale} />
           </>
         ) : (
           <>
-            <CaseDetails project={project} />
-            <CaseSolution project={project} />
+            <CaseDetails project={project} locale={locale} />
+            <CaseSolution project={project} locale={locale} />
           </>
         )}
 
         <section className="case-cta section-grid">
           <h2>{project.title}</h2>
           <a className="text-cta case-live-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-            <LetterSwapText label="Visit live project" />
+            <LetterSwapText label={copy.visitLiveProject} />
           </a>
         </section>
 
         <a className="next-project-teaser" href={nextProject.route} onClick={openNext}>
-          <span className="next-project-label">Next project</span>
+          <span className="next-project-label">
+            <LetterSwapText label={copy.nextProject} />
+          </span>
           <h2>{nextProject.title}</h2>
         </a>
 
@@ -170,19 +191,19 @@ export function ProjectCase({ project }: { project: Project }) {
           <div>
             <SplitRevealText
               as="h2"
-              ariaLabel="Let's make something memorable"
-              lines={["Let's make", "something", "memorable"]}
+              ariaLabel={copy.contactHeadingAria}
+              lines={copy.contactHeadingLines}
               mode="scroll"
             />
-            <p>Have a project or business that needs a stronger digital presence?</p>
+            <p>{copy.contactLead}</p>
             <a className="text-cta contact-cta" href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
-              <LetterSwapText label="LET’S BUILD YOUR WEBSITE" />
+              <LetterSwapText label={copy.contactCta} />
             </a>
           </div>
-          <ContactLinks />
+          <ContactLinks locale={locale} />
         </section>
       </main>
-      <Footer showBackHome />
+      <Footer locale={locale} showBackHome />
     </>
   );
 }

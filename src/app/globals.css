@@ -122,7 +122,7 @@ p {
   top: 0;
   z-index: 80;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
   gap: 28px;
   width: min(var(--max), calc(100% - var(--gutter) * 2));
@@ -203,6 +203,57 @@ p {
   color: var(--text);
 }
 
+.language-switcher {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(44px, 1fr));
+  align-items: center;
+  justify-self: end;
+  min-height: 44px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.language-switcher a {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 36px;
+  padding: 0 10px;
+  color: var(--muted);
+  transition: color 180ms ease;
+}
+
+.language-switcher a.is-active {
+  color: var(--accent-contrast);
+}
+
+.language-switcher-pill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  z-index: 0;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: var(--accent);
+  transform: translateX(0);
+  transition: transform 260ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.language-switcher--ru .language-switcher-pill {
+  transform: translateX(100%);
+}
+
 .desktop-nav a,
 .footer a,
 .case-meta a,
@@ -246,6 +297,7 @@ p {
 
 @media (hover: hover) and (pointer: fine) {
   .desktop-nav a:hover,
+  .language-switcher a:hover,
   .menu-toggle:hover,
   .mobile-menu-close:hover {
     color: var(--accent);
@@ -317,6 +369,12 @@ p {
   color: var(--text);
 }
 
+.mobile-menu>.language-switcher {
+  position: absolute;
+  top: 16px;
+  left: var(--gutter);
+}
+
 .mobile-menu nav {
   display: flex;
   flex-direction: column;
@@ -370,7 +428,7 @@ p {
   font-size: clamp(4.3rem, 7.8vw, 10.4rem);
   font-weight: 400;
   line-height: 0.91;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
@@ -685,7 +743,7 @@ p {
   font-size: clamp(2.7rem, 5.45vw, 7.6rem);
   font-weight: 400;
   line-height: 0.9;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .work-list-item small {
@@ -733,7 +791,7 @@ p {
   font-size: clamp(3rem, 11vw, 6.4rem);
   font-weight: 400;
   line-height: 0.9;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .mobile-work-category,
@@ -847,7 +905,7 @@ h2 {
   font-family: var(--font-display), sans-serif;
   font-weight: 400;
   line-height: 0.94;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .service-statement {
@@ -998,6 +1056,55 @@ h2 {
   font-family: var(--font-mono), monospace;
   font-size: 0.76rem;
   text-transform: uppercase;
+}
+
+.advantages-section {
+  --advantages-edge: max(var(--gutter), calc((100vw - var(--max)) / 2));
+  --advantages-left: var(--advantages-edge);
+  --advantages-top: clamp(80px, 7vw, 120px);
+  --advantages-width: min(var(--max), calc(100vw - var(--advantages-edge) * 2));
+
+  position: relative;
+  min-height: clamp(1040px, 72vw, 1180px);
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.advantage-rows {
+  position: absolute;
+  top: var(--advantages-top);
+  left: var(--advantages-left);
+  width: var(--advantages-width);
+  max-width: calc(100vw - var(--advantages-edge) * 2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.advantage-row {
+  padding: clamp(24px, 3vw, 44px) 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.5rem, 2.3vw, 3rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.advantage-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.advantage-row span {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(0.85rem, 1.8vw, 2rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: baseline;
+  white-space: nowrap;
 }
 
 /* contact */
@@ -1264,7 +1371,7 @@ html.has-magnetic-cursor .magnetic-cursor {
   font-size: clamp(3.5rem, 8vw, 9rem);
   font-weight: 400;
   line-height: 0.9;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   opacity: 0;
   transform: translate3d(0, 10px, 0);
   transition: opacity 180ms ease, transform 180ms ease;
@@ -1788,6 +1895,12 @@ html.has-magnetic-cursor .magnetic-cursor {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .advantages-section {
+    --advantages-left: var(--advantages-edge);
+    --advantages-width: calc(100vw - var(--advantages-edge) * 2);
+    min-height: clamp(980px, 96vw, 1120px);
+  }
+
   .service-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1967,7 +2080,7 @@ html.has-magnetic-cursor .magnetic-cursor {
 
   .site-header {
     gap: 10px;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
   }
 
   .site-header,
@@ -2215,6 +2328,23 @@ html.has-magnetic-cursor .magnetic-cursor {
     line-height: 1.04;
   }
 
+  .advantages-section {
+    --advantages-top: 34px;
+    --advantages-left: 16px;
+    --advantages-width: calc(100vw - 32px);
+    min-height: clamp(980px, 212vw, 1140px);
+  }
+
+  .advantage-row {
+    padding: 22px 0;
+    font-size: clamp(1.32rem, 6.6vw, 2.25rem);
+    line-height: 1.12;
+  }
+
+  .advantage-row span {
+    font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+  }
+
   .contact h2 {
     font-size: clamp(2.45rem, 12vw, 4.9rem);
   }
@@ -2387,6 +2517,14 @@ html.has-magnetic-cursor .magnetic-cursor {
     font-size: clamp(1.9rem, 9.4vw, 3.2rem);
   }
 
+  .advantages-section {
+    min-height: clamp(1040px, 236vw, 1180px);
+  }
+
+  .advantage-row {
+    font-size: clamp(1.24rem, 6.4vw, 2rem);
+  }
+
   .contact h2 {
     font-size: clamp(2.15rem, 11vw, 3.9rem);
   }
@@ -2450,6 +2588,10 @@ html.has-magnetic-cursor .magnetic-cursor {
 
   .about-meta-list {
     grid-template-columns: 1fr;
+  }
+
+  .advantages-section {
+    min-height: 1120px;
   }
 
   .contact-row {

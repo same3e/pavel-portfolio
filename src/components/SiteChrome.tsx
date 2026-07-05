@@ -1,14 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LetterSwapText } from "@/components/LetterSwapText";
-import { contact, navigation, site } from "@/content/portfolio";
+import { contact, dictionary, getNavigation, getSite, locales, type Locale, withLocale } from "@/content/portfolio";
 
-export function Header() {
+function getAnchorHref(locale: Locale, hash: string) {
+  return `${withLocale(locale, "/")}${hash}`;
+}
+
+function LanguageSwitcher({ locale, onNavigate }: { locale: Locale; onNavigate?: () => void }) {
+  const pathname = usePathname() || "/";
+
+  return (
+    <nav className={`language-switcher language-switcher--${locale}`} aria-label={dictionary[locale].languageAria}>
+      {locales.map((item) => (
+        <Link
+          className={item === locale ? "is-active" : ""}
+          href={withLocale(item, pathname)}
+          hrefLang={item}
+          aria-current={item === locale ? "page" : undefined}
+          key={item}
+          onClick={onNavigate}
+        >
+          <LetterSwapText label={item.toUpperCase()} />
+        </Link>
+      ))}
+      <span className="language-switcher-pill" aria-hidden="true" />
+    </nav>
+  );
+}
+
+export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const currentSite = getSite(locale);
+  const copy = dictionary[locale];
+  const navigation = getNavigation(locale);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -66,24 +96,25 @@ export function Header() {
   return (
     <>
       <header className="site-header">
-        <Link className="brand" href="/" aria-label="Pavel portfolio home">
+        <Link className="brand" href={withLocale(locale, "/")} aria-label={copy.brandAria}>
           <span className="brand-label brand-label--desktop">
-            <LetterSwapText label="PAVEL · DEVELOP" />
+            <LetterSwapText label={copy.desktopBrand} />
           </span>
           <span className="brand-label brand-label--mobile">
-            <LetterSwapText label="PAVEL.DEV" />
+            <LetterSwapText label={copy.mobileBrand} />
           </span>
         </Link>
-        <nav className="desktop-nav" aria-label="Primary navigation">
+        <nav className="desktop-nav" aria-label={copy.navAria}>
           {navigation.map((item) => (
-            <Link href={`/${item.href}`} key={item.href}>
+            <Link href={getAnchorHref(locale, item.href)} key={item.href}>
               <LetterSwapText label={item.label} />
             </Link>
           ))}
         </nav>
+        <LanguageSwitcher locale={locale} />
         <div className="availability">
           <span aria-hidden="true" />
-          {site.availability}
+          {currentSite.availability}
         </div>
         <button
           ref={menuButtonRef}
@@ -93,25 +124,26 @@ export function Header() {
           aria-controls="mobile-menu"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          <LetterSwapText label={menuOpen ? "Close" : "Menu"} />
+          <LetterSwapText label={menuOpen ? copy.close : copy.menu} />
         </button>
       </header>
 
       {menuOpen && (
-        <div className="mobile-menu is-open" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <div className="mobile-menu is-open" id="mobile-menu" role="dialog" aria-modal="true" aria-label={copy.mobileNavAria}>
           <button ref={closeButtonRef} className="mobile-menu-close" type="button" onClick={closeMenu}>
-            <LetterSwapText label="Close" />
+            <LetterSwapText label={copy.close} />
           </button>
-          <nav aria-label="Mobile navigation">
+          <LanguageSwitcher locale={locale} onNavigate={closeMenu} />
+          <nav aria-label={copy.mobileNavAria}>
             {navigation.map((item) => (
-              <Link href={`/${item.href}`} key={item.href} onClick={closeMenu}>
+              <Link href={getAnchorHref(locale, item.href)} key={item.href} onClick={closeMenu}>
                 <LetterSwapText label={item.label} />
               </Link>
             ))}
           </nav>
           <div className="mobile-menu-meta">
-            <p>{site.location}</p>
-            <p>{site.availability}</p>
+            <p>{currentSite.location}</p>
+            <p>{currentSite.availability}</p>
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
         </div>
@@ -120,26 +152,28 @@ export function Header() {
   );
 }
 
-export function Footer({ showBackHome = false }: { showBackHome?: boolean }) {
+export function Footer({ locale, showBackHome = false }: { locale: Locale; showBackHome?: boolean }) {
   const year = useMemo(() => new Date().getFullYear(), []);
+  const currentSite = getSite(locale);
+  const copy = dictionary[locale];
 
   return (
     <footer className="footer">
-      <p>Pavel Kostin - Independent Web Designer & Developer</p>
-      <p>{site.location}</p>
-      <p>Portfolio design and development by Pavel - {year}</p>
+      <p>{copy.footerRole}</p>
+      <p>{currentSite.location}</p>
+      <p>{copy.footerCredit} - {year}</p>
       {showBackHome ? (
-        <Link href="/">
-          <LetterSwapText label="Back home" />
+        <Link href={withLocale(locale, "/")}>
+          <LetterSwapText label={copy.backHome} />
         </Link>
       ) : null}
     </footer>
   );
 }
 
-export function ContactLink({ label, href }: { label: string; href: string }) {
+export function ContactLink({ label, actionLabel, href }: { label: string; actionLabel: string; href: string }) {
   const finalHref =
-    label === "Email" && !href.startsWith("mailto:")
+    href === contact.email && !href.startsWith("mailto:")
       ? `mailto:${href}`
       : href;
   const isExternal = !finalHref.startsWith("mailto:");
@@ -152,18 +186,20 @@ export function ContactLink({ label, href }: { label: string; href: string }) {
       rel={isExternal ? "noopener noreferrer" : undefined}
     >
       <span>{label}</span>
-      <LetterSwapText label="Open" />
+      <LetterSwapText label={actionLabel} />
     </a>
   );
 }
 
-export function ContactLinks() {
+export function ContactLinks({ locale }: { locale: Locale }) {
+  const copy = dictionary[locale];
+
   return (
     <div className="contact-list">
-      <ContactLink label="Email" href={contact.email} />
-      <ContactLink label="Instagram" href={contact.instagram} />
-      <ContactLink label="Telegram" href={contact.telegram} />
-      <ContactLink label="WhatsApp" href={contact.whatsapp} />
+      <ContactLink label={copy.email} actionLabel={copy.open} href={contact.email} />
+      <ContactLink label="Instagram" actionLabel={copy.open} href={contact.instagram} />
+      <ContactLink label="Telegram" actionLabel={copy.open} href={contact.telegram} />
+      <ContactLink label="WhatsApp" actionLabel={copy.open} href={contact.whatsapp} />
     </div>
   );
 }

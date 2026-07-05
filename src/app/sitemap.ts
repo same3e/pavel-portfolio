@@ -1,22 +1,21 @@
 import type { MetadataRoute } from "next";
-import { projects, site } from "@/content/portfolio";
+import { getProjectPath, locales, projectIds, site } from "@/content/portfolio";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
-    {
-      url: site.productionUrl,
+    ...locales.map((locale) => ({
+      url: new URL(locale === "en" ? "/" : "/ru", site.productionUrl).toString(),
       lastModified: now,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 1
-    },
-    ...projects.map((project) => ({
-      url: new URL(project.route, site.productionUrl).toString(),
+    })),
+    ...locales.flatMap((locale) => projectIds.map((projectId) => ({
+      url: new URL(getProjectPath(projectId, locale), site.productionUrl).toString(),
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.8
-    }))
+    })))
   ];
 }
-

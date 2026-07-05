@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type Ref } from "react";
 import { LetterSwapText } from "@/components/LetterSwapText";
 import { useMotionShell } from "@/components/MotionShell";
-import { Project, projects } from "@/content/portfolio";
+import { dictionary, getProjects, type Locale, type Project } from "@/content/portfolio";
 
 function ProjectPreviewMedia({ project, mediaRef }: { project: Project; mediaRef?: Ref<HTMLDivElement> }) {
   return (
@@ -21,8 +21,10 @@ function ProjectPreviewMedia({ project, mediaRef }: { project: Project; mediaRef
   );
 }
 
-export function SelectedWork() {
+export function SelectedWork({ locale }: { locale: Locale }) {
   const { openProject } = useMotionShell();
+  const copy = dictionary[locale];
+  const projects = getProjects(locale);
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -115,11 +117,11 @@ export function SelectedWork() {
 
   return (
     <section className="selected-work" id="work" aria-labelledby="work-title">
-      <h2 id="work-title" className="sr-only">Selected work</h2>
+      <h2 id="work-title" className="sr-only">{copy.selectedWorkTitle}</h2>
 
       <div className="selected-work-inner selected-work-desktop" ref={sectionRef}>
         <div className="work-list-panel">
-          <div className="work-list" aria-label="Selected projects">
+          <div className="work-list" aria-label={copy.selectedProjectsAria}>
             {projects.map((project, index) => (
               <a
                 ref={(element) => {
@@ -144,11 +146,11 @@ export function SelectedWork() {
             href={activeProject.route}
             onClick={(event) => handleProjectClick(event, activeProject)}
           >
-            <LetterSwapText label="Explore the case" />
+            <LetterSwapText label={copy.exploreTheCase} />
           </a>
         </div>
 
-        <aside className="work-preview" aria-label={`${activeProject.title} preview`}>
+        <aside className="work-preview" aria-label={`${activeProject.title} ${copy.preview}`}>
           <div className="work-floating-preview" ref={previewRef}>
             <div className="work-media-shell">
               <ProjectPreviewMedia project={activeProject} mediaRef={mediaRef} />
@@ -158,19 +160,19 @@ export function SelectedWork() {
             </p>
             <div className="work-info" key={activeProject.id}>
               <div className="work-info-row">
-                <span>Year</span>
+                <span>{copy.year}</span>
                 <p>{activeProject.year}</p>
               </div>
               <div className="work-info-row">
-                <span>Overview</span>
+                <span>{copy.overview}</span>
                 <p>{activeProject.overview}</p>
               </div>
               <div className="work-info-row">
-                <span>Role</span>
+                <span>{copy.role}</span>
                 <p>{activeProject.role}</p>
               </div>
               <div className="work-info-row">
-                <span>Type</span>
+                <span>{copy.type}</span>
                 <p>{activeProject.type}</p>
               </div>
             </div>
@@ -178,7 +180,7 @@ export function SelectedWork() {
         </aside>
       </div>
 
-      <div className="selected-work-mobile" aria-label="Selected projects">
+      <div className="selected-work-mobile" aria-label={copy.selectedProjectsAria}>
         {projects.map((project) => (
           <article className="mobile-work-item" key={project.id}>
             <a
@@ -201,11 +203,11 @@ export function SelectedWork() {
             <p className="mobile-work-summary">{project.description}</p>
             <dl className="mobile-work-meta">
               <div>
-                <dt>Year</dt>
+                <dt>{copy.year}</dt>
                 <dd>{project.year}</dd>
               </div>
               <div>
-                <dt>Type</dt>
+                <dt>{copy.type}</dt>
                 <dd>{project.type}</dd>
               </div>
             </dl>
@@ -214,7 +216,7 @@ export function SelectedWork() {
               href={project.route}
               onClick={(event) => handleProjectClick(event, project)}
             >
-              <LetterSwapText label="Explore case" />
+              <LetterSwapText label={copy.exploreCase} />
             </a>
           </article>
         ))}

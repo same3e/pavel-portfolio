@@ -1,13 +1,14 @@
 # Pavel Portfolio
 
-Editorial portfolio for Pavel Kostin, an independent web designer and developer based in Tbilisi. The site presents selected work, services, contact paths and case-study pages with a restrained dark theme and project-focused motion.
+Editorial bilingual portfolio for Pavel Kostin, an independent web designer and developer based in Tbilisi. The site presents selected work, services, contact paths and case-study pages with restrained light/dark styling, project-focused motion and URL-based language routing.
 
 ## Stack
 
 - Next.js App Router
 - React
-- TypeScript
+- TypeScript strict mode
 - CSS in `src/app/globals.css`
+- GSAP and `@gsap/react`
 - `next/font/google` with Pixelify Sans, Inter Tight and IBM Plex Mono
 
 ## Requirements
@@ -37,13 +38,24 @@ npm run lint
 npm run build
 ```
 
+## Routes and Languages
+
+- English: `/`, `/projects/<slug>`
+- Russian: `/ru`, `/ru/projects/<slug>`
+- `/en` redirects to `/`
+- Project slugs are not translated.
+- Language is controlled only by the URL. Do not add language cookies or localStorage.
+
 ## Project Structure
 
-- `src/app/layout.tsx` - global metadata, fonts and shell.
-- `src/app/page.tsx` - homepage sections.
-- `src/app/work/*/page.tsx` - project route metadata and case pages.
-- `src/components` - header, footer, selected work, project case and route motion.
-- `src/content/portfolio.ts` - portfolio copy, contact links, services and project data.
+- `src/app/layout.tsx` - global metadata, fonts, skip link and motion shell.
+- `src/app/page.tsx` - English homepage route.
+- `src/app/ru/page.tsx` - Russian homepage route.
+- `src/app/projects/[slug]/page.tsx` - English project case route and metadata.
+- `src/app/ru/projects/[slug]/page.tsx` - Russian project case route and metadata.
+- `src/app/work/*/page.tsx` - legacy redirects to `/projects/*`.
+- `src/components` - header, footer, selected work, project case, letter swap and route motion.
+- `src/content/portfolio.ts` - localized portfolio copy, contact links, services and project data.
 - `public/projects` - project preview assets.
 - `public/videos/frames` - generated dark hero portrait frame sequence.
 
@@ -51,14 +63,17 @@ npm run build
 
 Most copy and structured content lives in `src/content/portfolio.ts`.
 
+Text fields are typed as `Record<"en" | "ru", string>` or nested localized objects. If a new visible string is added to the shared content model without both `en` and `ru`, TypeScript should fail the build.
+
 To update contacts, edit the `contact` object. Keep external URLs clean, use `mailto:` for email rendering through the existing component, and preserve the WhatsApp prefilled message unless the business flow changes.
 
 To add a project:
 
 1. Add the preview asset under `public/projects/<project-id>/`.
-2. Add a new item to `projects` in `src/content/portfolio.ts`.
-3. Create a matching route under `src/app/work/<project-id>/page.tsx`.
-4. Add project-specific metadata using the project's `seoTitle` and `seoDescription`.
+2. Add a new `ProjectId`.
+3. Add a localized item to `projectContent` in `src/content/portfolio.ts`.
+4. Create no translated slug; both languages should use the same slug.
+5. Confirm metadata, alt text and showcase captions include both `en` and `ru`.
 
 ## Screenshots
 
@@ -94,7 +109,7 @@ ffmpeg -y -ss 0.4 -i public/videos/portrait-dark.mp4 -an -vf "fps=24,scale=960:9
 
 ## Vercel Deployment
 
-The site is deployable as a standard Next.js project on Vercel. Keep `site.productionUrl` in `src/content/portfolio.ts` aligned with the production deployment because metadata, sitemap and robots use it as the canonical base.
+The site is deployable as a standard Next.js project on Vercel. Keep `site.productionUrl` in `src/content/portfolio.ts` aligned with the production deployment because metadata, sitemap, robots and canonical URLs use it as the base.
 
 ## Fonts
 
@@ -104,4 +119,4 @@ The site uses free Google Fonts through `next/font/google`:
 - Inter Tight for body and interface text.
 - IBM Plex Mono for metadata and technical labels.
 
-No proprietary font files are committed.
+These fonts are loaded through `next/font/google` and self-hosted by Next.js in production. No proprietary font files are committed.

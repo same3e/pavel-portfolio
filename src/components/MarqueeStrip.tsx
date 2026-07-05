@@ -3,17 +3,15 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
+import { dictionary, type Locale } from "@/content/portfolio";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const MARQUEE_TEXT = Array.from(
-  { length: 10 },
-  () => "WEB DESIGN — AUTOMATION — CRM INTEGRATIONS — BOOKING BOTS — "
-).join("");
-
-export function MarqueeStrip() {
+export function MarqueeStrip({ locale }: { locale: Locale }) {
   const rootRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const copy = dictionary[locale];
+  const marqueeText = Array.from({ length: 10 }, () => copy.marqueeText).join("");
 
   useEffect(() => {
     const root = rootRef.current;
@@ -54,9 +52,9 @@ export function MarqueeStrip() {
   }, []);
 
   return (
-    <section className="marquee-strip" aria-label="Services and integrations" ref={rootRef}>
+    <section className="marquee-strip" aria-label={copy.marqueeAria} ref={rootRef}>
       <div className="marquee-track" ref={trackRef}>
-        {MARQUEE_TEXT}
+        {marqueeText}
       </div>
     </section>
   );

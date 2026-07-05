@@ -6,7 +6,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { SplitRevealText } from "@/components/SplitRevealText";
-import type { ProjectShowcase as ProjectShowcaseData } from "@/content/portfolio";
+import { dictionary, type Locale, type ProjectShowcase as ProjectShowcaseData } from "@/content/portfolio";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -17,6 +17,7 @@ type ProjectShowcaseProps = {
   hideCaptions?: boolean;
   interludeAfterIndex?: number;
   interludeText?: string;
+  locale: Locale;
 };
 
 export function ProjectShowcase({
@@ -25,15 +26,17 @@ export function ProjectShowcase({
   hideHeader = false,
   hideCaptions = false,
   interludeAfterIndex,
-  interludeText
+  interludeText,
+  locale
 }: ProjectShowcaseProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const copy = dictionary[locale];
   const itemCount = showcase.screens.length || showcase.placeholderCount || 0;
   const galleryLabel = useMemo(
-    () => `${showcase.title} gallery with ${itemCount} ${itemCount === 1 ? "item" : "items"}`,
-    [itemCount, showcase.title]
+    () => `${showcase.title} ${copy.galleryWith} ${itemCount} ${itemCount === 1 ? copy.galleryItem : copy.galleryItems}`,
+    [copy.galleryItem, copy.galleryItems, copy.galleryWith, itemCount, showcase.title]
   );
   const sizes =
     variant === "desktop"
@@ -164,7 +167,7 @@ export function ProjectShowcase({
               className="project-showcase__item"
               data-showcase-item
               tabIndex={0}
-              aria-label={`${String(index + 1).padStart(2, "0")} of ${itemCount}: ${screen.caption}`}
+              aria-label={`${String(index + 1).padStart(2, "0")} ${copy.of} ${itemCount}: ${screen.caption}`}
             >
               <div className="project-showcase__image">
                 <Image
@@ -195,12 +198,12 @@ export function ProjectShowcase({
                 className="project-showcase__item project-showcase__item--placeholder"
                 data-showcase-item
                 tabIndex={0}
-                aria-label={`${String(index + 1).padStart(2, "0")} of ${itemCount}: mobile screenshot placeholder`}
+                aria-label={`${String(index + 1).padStart(2, "0")} ${copy.of} ${itemCount}: ${copy.mobileScreenshotPlaceholder}`}
                 key={`placeholder-${index}`}
               >
                 <div className="project-showcase__placeholder">
                   <span>{String(index + 1).padStart(2, "0")}</span>
-                  <p>Mobile screenshot placeholder</p>
+                  <p>{copy.mobileScreenshotPlaceholder}</p>
                 </div>
               </figure>
             ))

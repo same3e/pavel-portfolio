@@ -8,8 +8,8 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
-  const site = getSite("en");
+export default function RussianOpenGraphImage() {
+  const site = getSite("ru");
 
   return new ImageResponse(
     (
@@ -43,14 +43,14 @@ export default function OpenGraphImage() {
             display: "flex",
             flexDirection: "column",
             fontFamily: "sans-serif",
-            fontSize: 104,
+            fontSize: 96,
             fontWeight: 700,
             letterSpacing: 0,
-            lineHeight: 0.92
+            lineHeight: 0.98
           }}
         >
-          <span>Web Designer</span>
-          <span>&amp; Developer</span>
+          <span>Веб-дизайнер</span>
+          <span>и разработчик</span>
         </div>
       </div>
     ),
