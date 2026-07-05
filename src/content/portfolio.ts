@@ -199,13 +199,13 @@ export const projects = [
     visualSystem:
       "Everything here doubles as a live demo - the grid, the type scale, the color system are the actual production styles a client would get, not a mockup wrapped around fake content.",
     typography:
-      "A light pixel display face carries only headlines and labels; every paragraph stays in a plain grotesk, so the accent reads as a signature, not a readability tax.",
+      "A pixel display face carries only headlines and labels; every paragraph stays in a plain grotesk, so the accent reads as a signature, not a readability tax.",
     motion:
       "Word-by-word reveals and letter-swap hovers exist to prove the animation is hand-built with GSAP, not a template effect - the kind of detail a client notices without being told.",
     context:
       "A freelancer's site usually reads like a brochure - logo, services, contact - and proves nothing about how the person actually builds. This one had to work as the strongest case study in the whole portfolio.",
     direction:
-      "Built the site itself as the pitch: real code, a working theme switch, real motion - so sending the link in a cold DM does more work than a sentence ever could.",
+      "Built the site itself as the pitch: real code, a focused dark interface, real motion - so sending the link in a cold DM does more work than a sentence ever could.",
     route: "/work/pavel-portfolio",
     liveUrl: "https://pavel-portfolio-six.vercel.app/",
     // TODO: add real screenshots when available: /projects/pavel-portfolio/desktop.webp and /projects/pavel-portfolio/mobile.webp.

@@ -71,22 +71,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F2F0EA",
+  themeColor: "#11110f",
   width: "device-width",
   initialScale: 1
 };
-
-const themeScript = `
-(() => {
-  try {
-    const stored = localStorage.getItem("theme");
-    const theme = stored === "light" || stored === "dark"
-      ? stored
-      : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    document.documentElement.dataset.theme = theme;
-  } catch (_) {}
-})();
-`;
 
 export default function RootLayout({
   children
@@ -94,10 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
+    <html lang="en">
       <body className={`${pixelifySans.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
         <a className="skip-link" href="#main-content">
           Skip to content

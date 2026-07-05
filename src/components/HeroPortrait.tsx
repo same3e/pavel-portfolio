@@ -9,14 +9,9 @@ const portraitFrameSequence = {
   pad: 3
 } as const;
 
-const darkPortraitSequence = {
+const portraitSequence = {
   ...portraitFrameSequence,
-  basePath: "/videos/portrait-dark-frames"
-} as const;
-
-const lightPortraitSequence = {
-  ...portraitFrameSequence,
-  basePath: "/videos/portrait-light-frames"
+  basePath: "/videos/frames"
 } as const;
 
 export function HeroPortrait() {
@@ -35,8 +30,7 @@ export function HeroPortrait() {
 
       <div className="portrait-viewport">
         <CursorScrubFrameSequence
-          darkSequence={darkPortraitSequence}
-          lightSequence={lightPortraitSequence}
+          sequence={portraitSequence}
           onTrackingChange={setIsTracking}
         />
       </div>

@@ -1,6 +1,6 @@
 # Pavel Portfolio
 
-Editorial portfolio for Pavel Kostin, an independent web designer and developer based in Tbilisi. The site presents selected work, services, contact paths and case-study pages with restrained light/dark themes and project-focused motion.
+Editorial portfolio for Pavel Kostin, an independent web designer and developer based in Tbilisi. The site presents selected work, services, contact paths and case-study pages with a restrained dark theme and project-focused motion.
 
 ## Stack
 
@@ -39,13 +39,13 @@ npm run build
 
 ## Project Structure
 
-- `src/app/layout.tsx` - global metadata, fonts, theme bootstrap and shell.
+- `src/app/layout.tsx` - global metadata, fonts and shell.
 - `src/app/page.tsx` - homepage sections.
 - `src/app/work/*/page.tsx` - project route metadata and case pages.
 - `src/components` - header, footer, selected work, project case and route motion.
 - `src/content/portfolio.ts` - portfolio copy, contact links, services and project data.
 - `public/projects` - project preview assets.
-- `public/videos/portrait-*-frames` - generated hero portrait frame sequences.
+- `public/videos/frames` - generated dark hero portrait frame sequence.
 
 ## Content Updates
 
@@ -80,18 +80,16 @@ Do not reuse a desktop crop as a mobile screenshot. If a real mobile screenshot 
 
 ## Hero Frame Sequence
 
-The homepage portrait scrub uses generated WebP frame sequences instead of seeking MP4 files at runtime:
+The homepage portrait scrub renders a generated WebP frame sequence to canvas instead of swapping image sources or seeking MP4 files at runtime:
 
-- `public/videos/portrait-dark-frames/frame-000.webp` through `frame-110.webp`
-- `public/videos/portrait-light-frames/frame-000.webp` through `frame-110.webp`
+- `public/videos/frames/frame-000.webp` through `frame-110.webp`
 
-The source MP4 files remain in `public/videos`. The current sequence was generated from `0.4s` onward at `24fps`, `960 x 960`, WebP quality `76`.
+The sequence should contain 111 frames with matching dimensions and stable positioning. `frame-055.webp` is used as the center poster frame.
 
-Regeneration command:
+Example regeneration command:
 
 ```bash
-ffmpeg -y -ss 0.4 -i public/videos/portrait-light.mp4 -an -vf "fps=24,scale=960:960:flags=lanczos" -c:v libwebp -start_number 0 -compression_level 6 -q:v 76 public/videos/portrait-light-frames/frame-%03d.webp
-ffmpeg -y -ss 0.4 -i public/videos/portrait-dark.mp4 -an -vf "fps=24,scale=960:960:flags=lanczos" -c:v libwebp -start_number 0 -compression_level 6 -q:v 76 public/videos/portrait-dark-frames/frame-%03d.webp
+ffmpeg -y -ss 0.4 -i public/videos/portrait-dark.mp4 -an -vf "fps=24,scale=960:960:flags=lanczos" -c:v libwebp -start_number 0 -compression_level 6 -q:v 76 public/videos/frames/frame-%03d.webp
 ```
 
 ## Vercel Deployment

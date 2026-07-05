@@ -10,17 +10,15 @@ type FrameSequence = {
 };
 
 type CursorScrubFrameSequenceProps = {
-  darkSequence: FrameSequence;
-  lightSequence: FrameSequence;
+  sequence: FrameSequence;
   className?: string;
   onTrackingChange?: (isTracking: boolean) => void;
 };
 
-type SequenceTheme = "dark" | "light";
-
 const CENTER_PROGRESS = 0.5;
 const INTERPOLATION = 0.3;
 const PROGRESS_EPSILON = 0.002;
+const PRELOAD_CONCURRENCY = 6;
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max);
@@ -57,25 +55,46 @@ function getPreloadOrder(frameCount: number, startIndex: number) {
   return order;
 }
 
+function findNearestCachedFrame(cache: Map<number, HTMLImageElement>, targetIndex: number, frameCount: number) {
+  if (cache.has(targetIndex)) {
+    return targetIndex;
+  }
+
+  for (let offset = 1; offset < frameCount; offset += 1) {
+    const left = targetIndex - offset;
+    const right = targetIndex + offset;
+
+    if (left >= 0 && cache.has(left)) {
+      return left;
+    }
+
+    if (right < frameCount && cache.has(right)) {
+      return right;
+    }
+  }
+
+  return null;
+}
+
 export function CursorScrubFrameSequence({
-  darkSequence,
-  lightSequence,
+  sequence,
   className,
   onTrackingChange
 }: CursorScrubFrameSequenceProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const darkImageRef = useRef<HTMLImageElement | null>(null);
-  const lightImageRef = useRef<HTMLImageElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const targetProgressRef = useRef(CENTER_PROGRESS);
   const currentProgressRef = useRef(CENTER_PROGRESS);
   const animationFrameRef = useRef<number | null>(null);
-  const initialReadyRef = useRef<Record<SequenceTheme, boolean>>({ dark: false, light: false });
-  const loadFailedRef = useRef<Record<SequenceTheme, boolean>>({ dark: false, light: false });
+  const frameCacheRef = useRef<Map<number, HTMLImageElement>>(new Map());
+  const pendingFramesRef = useRef<Map<number, Promise<HTMLImageElement>>>(new Map());
+  const currentFrameRef = useRef<number | null>(null);
+  const currentImageRef = useRef<HTMLImageElement | null>(null);
   const reducedMotionRef = useRef(false);
   const finePointerRef = useRef(false);
   const draggingRef = useRef(false);
   const trackingRef = useRef(false);
-  const preloadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const destroyedRef = useRef(false);
   const onTrackingChangeRef = useRef(onTrackingChange);
 
   useEffect(() => {
@@ -84,26 +103,25 @@ export function CursorScrubFrameSequence({
 
   useEffect(() => {
     const root = rootRef.current;
-    const darkImage = darkImageRef.current;
-    const lightImage = lightImageRef.current;
+    const canvas = canvasRef.current;
 
-    if (!root || !darkImage || !lightImage) {
+    if (!root || !canvas) {
       return;
     }
 
-    const rootElement: HTMLDivElement = root;
-    const imageElements: Record<SequenceTheme, HTMLImageElement> = {
-      dark: darkImage,
-      light: lightImage
-    };
-    const sequences: Record<SequenceTheme, FrameSequence> = {
-      dark: darkSequence,
-      light: lightSequence
-    };
+    const rootElement = root;
+    const canvasElement = canvas;
+    const context = canvasElement.getContext("2d", { alpha: true });
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const centerFrame = getFrameIndex(CENTER_PROGRESS, sequence.frameCount);
+    const preloadOrder = getPreloadOrder(sequence.frameCount, centerFrame);
+    let preloadCursor = 0;
+    let activePreloads = 0;
 
+    destroyedRef.current = false;
     rootElement.dataset.ready = "false";
+    rootElement.dataset.interactive = "false";
 
     function setTracking(nextValue: boolean) {
       if (trackingRef.current === nextValue) {
@@ -121,40 +139,144 @@ export function CursorScrubFrameSequence({
       }
     }
 
-    function hasReadyImage() {
-      return initialReadyRef.current.dark || initialReadyRef.current.light;
-    }
+    function sizeCanvas() {
+      const rect = canvasElement.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.max(1, Math.round(rect.width * dpr));
+      const height = Math.max(1, Math.round(rect.height * dpr));
 
-    function allInitialImagesSettled() {
-      return (
-        (initialReadyRef.current.dark || loadFailedRef.current.dark) &&
-        (initialReadyRef.current.light || loadFailedRef.current.light)
-      );
-    }
-
-    function revealIfSettled() {
-      if (allInitialImagesSettled()) {
-        rootElement.dataset.ready = "true";
+      if (canvasElement.width !== width || canvasElement.height !== height) {
+        canvasElement.width = width;
+        canvasElement.height = height;
       }
     }
 
-    function setImageFrame(theme: SequenceTheme, progress: number) {
-      const image = imageElements[theme];
-      const sequence = sequences[theme];
-      const frameIndex = getFrameIndex(progress, sequence.frameCount);
-      const frameKey = String(frameIndex);
-
-      if (image.dataset.frameIndex === frameKey) {
+    function drawImage(image: HTMLImageElement) {
+      if (!context) {
         return;
       }
 
-      image.dataset.frameIndex = frameKey;
-      image.src = getFrameSrc(sequence, frameIndex);
+      sizeCanvas();
+      context.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+      const imageRatio = image.naturalWidth / image.naturalHeight;
+      const canvasRatio = canvasElement.width / canvasElement.height;
+      const drawWidth = imageRatio > canvasRatio ? canvasElement.width : canvasElement.height * imageRatio;
+      const drawHeight = imageRatio > canvasRatio ? canvasElement.width / imageRatio : canvasElement.height;
+      const x = (canvasElement.width - drawWidth) / 2;
+      const y = (canvasElement.height - drawHeight) / 2;
+
+      context.drawImage(image, x, y, drawWidth, drawHeight);
+      currentImageRef.current = image;
     }
 
-    function syncAllImagesToProgress(progress: number) {
-      setImageFrame("dark", progress);
-      setImageFrame("light", progress);
+    function drawFrame(index: number) {
+      const image = frameCacheRef.current.get(index);
+
+      if (!image || currentFrameRef.current === index) {
+        return;
+      }
+
+      currentFrameRef.current = index;
+      drawImage(image);
+    }
+
+    async function loadFrame(index: number) {
+      const cached = frameCacheRef.current.get(index);
+
+      if (cached) {
+        return cached;
+      }
+
+      const pending = pendingFramesRef.current.get(index);
+
+      if (pending) {
+        return pending;
+      }
+
+      const promise = new Promise<HTMLImageElement>((resolve, reject) => {
+        const image = new window.Image();
+        image.decoding = "async";
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error(`Failed to load portrait frame ${index}`));
+        image.src = getFrameSrc(sequence, index);
+      }).then(async (image) => {
+        try {
+          await image.decode();
+        } catch {
+          // Some browsers resolve onload after decode or reject decode for cached images.
+        }
+
+        frameCacheRef.current.set(index, image);
+        pendingFramesRef.current.delete(index);
+        return image;
+      });
+
+      pendingFramesRef.current.set(index, promise);
+      return promise;
+    }
+
+    function revealCenterFrame() {
+      loadFrame(centerFrame)
+        .then((image) => {
+          if (destroyedRef.current) {
+            return;
+          }
+
+          frameCacheRef.current.set(centerFrame, image);
+          drawFrame(centerFrame);
+          rootElement.dataset.ready = "true";
+
+          if (!reducedMotionRef.current) {
+            rootElement.dataset.interactive = "true";
+            preloadFrames();
+          }
+        })
+        .catch(() => {
+          if (!destroyedRef.current) {
+            rootElement.dataset.ready = "false";
+          }
+        });
+    }
+
+    function preloadNextFrame() {
+      if (destroyedRef.current || reducedMotionRef.current) {
+        return;
+      }
+
+      while (activePreloads < PRELOAD_CONCURRENCY && preloadCursor < preloadOrder.length) {
+        const frameIndex = preloadOrder[preloadCursor];
+        preloadCursor += 1;
+
+        if (frameCacheRef.current.has(frameIndex) || pendingFramesRef.current.has(frameIndex)) {
+          continue;
+        }
+
+        activePreloads += 1;
+        loadFrame(frameIndex)
+          .catch(() => undefined)
+          .finally(() => {
+            activePreloads -= 1;
+            preloadNextFrame();
+          });
+      }
+    }
+
+    function preloadFrames() {
+      preloadNextFrame();
+    }
+
+    function syncToProgress(progress: number) {
+      const targetIndex = getFrameIndex(progress, sequence.frameCount);
+      const nearestIndex = findNearestCachedFrame(frameCacheRef.current, targetIndex, sequence.frameCount);
+
+      if (nearestIndex !== null) {
+        drawFrame(nearestIndex);
+      }
+
+      if (!frameCacheRef.current.has(targetIndex)) {
+        void loadFrame(targetIndex).catch(() => undefined);
+      }
     }
 
     function centerImmediately() {
@@ -162,13 +284,13 @@ export function CursorScrubFrameSequence({
       targetProgressRef.current = CENTER_PROGRESS;
       currentProgressRef.current = CENTER_PROGRESS;
       setTracking(false);
-      syncAllImagesToProgress(CENTER_PROGRESS);
+      syncToProgress(CENTER_PROGRESS);
     }
 
     function runTimelineStep() {
       animationFrameRef.current = null;
 
-      if (reducedMotionRef.current || !hasReadyImage()) {
+      if (reducedMotionRef.current || rootElement.dataset.ready !== "true") {
         return;
       }
 
@@ -181,7 +303,7 @@ export function CursorScrubFrameSequence({
           : currentProgress + delta * INTERPOLATION;
 
       currentProgressRef.current = nextProgress;
-      syncAllImagesToProgress(nextProgress);
+      syncToProgress(nextProgress);
 
       if (Math.abs(targetProgress - nextProgress) > PROGRESS_EPSILON) {
         animationFrameRef.current = window.requestAnimationFrame(runTimelineStep);
@@ -189,7 +311,7 @@ export function CursorScrubFrameSequence({
     }
 
     function scheduleTimelineStep() {
-      if (reducedMotionRef.current || !hasReadyImage()) {
+      if (reducedMotionRef.current || rootElement.dataset.ready !== "true") {
         return;
       }
 
@@ -199,8 +321,7 @@ export function CursorScrubFrameSequence({
     }
 
     function setTargetProgress(progress: number) {
-      const nextProgress = clamp(progress);
-      targetProgressRef.current = nextProgress;
+      targetProgressRef.current = clamp(progress);
       scheduleTimelineStep();
     }
 
@@ -220,43 +341,11 @@ export function CursorScrubFrameSequence({
       setTargetProgress(CENTER_PROGRESS);
     }
 
-    function handleImageLoad(theme: SequenceTheme) {
-      initialReadyRef.current[theme] = true;
-      revealIfSettled();
-    }
-
-    function handleImageError(theme: SequenceTheme) {
-      loadFailedRef.current[theme] = true;
-      revealIfSettled();
-    }
-
-    function preloadSequence(sequence: FrameSequence) {
-      const startIndex = getFrameIndex(CENTER_PROGRESS, sequence.frameCount);
-      const order = getPreloadOrder(sequence.frameCount, startIndex);
-
-      for (const frameIndex of order) {
-        const image = new window.Image();
-        image.decoding = "async";
-        image.src = getFrameSrc(sequence, frameIndex);
-        preloadedImagesRef.current.push(image);
-      }
-    }
-
-    function preloadFramesIfNeeded() {
-      if (reducedMotionRef.current || preloadedImagesRef.current.length > 0) {
-        return;
-      }
-
-      preloadSequence(darkSequence);
-      preloadSequence(lightSequence);
-    }
-
     function handleWindowPointerMove(event: PointerEvent) {
       if (!finePointerRef.current || reducedMotionRef.current || draggingRef.current) {
         return;
       }
 
-      preloadFramesIfNeeded();
       setTracking(true);
       setTargetFromViewport(event.clientX);
     }
@@ -276,7 +365,6 @@ export function CursorScrubFrameSequence({
         return;
       }
 
-      preloadFramesIfNeeded();
       draggingRef.current = true;
       setTracking(true);
       setTargetFromFrame(event.clientX);
@@ -317,8 +405,14 @@ export function CursorScrubFrameSequence({
       finePointerRef.current = finePointerQuery.matches;
 
       if (reducedMotionRef.current) {
+        rootElement.dataset.interactive = "false";
         centerImmediately();
         return;
+      }
+
+      if (rootElement.dataset.ready === "true") {
+        rootElement.dataset.interactive = "true";
+        preloadFrames();
       }
 
       if (!finePointerRef.current) {
@@ -326,29 +420,15 @@ export function CursorScrubFrameSequence({
       }
     }
 
-    const darkLoadHandler = () => handleImageLoad("dark");
-    const lightLoadHandler = () => handleImageLoad("light");
-    const darkErrorHandler = () => handleImageError("dark");
-    const lightErrorHandler = () => handleImageError("light");
+    const resizeObserver = new ResizeObserver(() => {
+      if (currentImageRef.current) {
+        drawImage(currentImageRef.current);
+      }
+    });
 
+    resizeObserver.observe(canvasElement);
     syncMotionPreferences();
-
-    if (finePointerRef.current && !reducedMotionRef.current) {
-      preloadFramesIfNeeded();
-    }
-
-    darkImage.addEventListener("load", darkLoadHandler);
-    darkImage.addEventListener("error", darkErrorHandler);
-    lightImage.addEventListener("load", lightLoadHandler);
-    lightImage.addEventListener("error", lightErrorHandler);
-
-    if (darkImage.complete && darkImage.naturalWidth > 0) {
-      handleImageLoad("dark");
-    }
-
-    if (lightImage.complete && lightImage.naturalWidth > 0) {
-      handleImageLoad("light");
-    }
+    revealCenterFrame();
 
     window.addEventListener("pointermove", handleWindowPointerMove, { passive: true });
     window.addEventListener("pointerout", handleWindowPointerOut, { passive: true });
@@ -361,12 +441,11 @@ export function CursorScrubFrameSequence({
     finePointerQuery.addEventListener("change", syncMotionPreferences);
 
     return () => {
+      destroyedRef.current = true;
       cancelAnimationFrameIfNeeded();
-      preloadedImagesRef.current = [];
-      darkImage.removeEventListener("load", darkLoadHandler);
-      darkImage.removeEventListener("error", darkErrorHandler);
-      lightImage.removeEventListener("load", lightLoadHandler);
-      lightImage.removeEventListener("error", lightErrorHandler);
+      resizeObserver.disconnect();
+      frameCacheRef.current.clear();
+      pendingFramesRef.current.clear();
       window.removeEventListener("pointermove", handleWindowPointerMove);
       window.removeEventListener("pointerout", handleWindowPointerOut);
       window.removeEventListener("blur", handleWindowBlur);
@@ -377,19 +456,18 @@ export function CursorScrubFrameSequence({
       reducedMotionQuery.removeEventListener("change", syncMotionPreferences);
       finePointerQuery.removeEventListener("change", syncMotionPreferences);
     };
-  }, [darkSequence, lightSequence]);
+  }, [sequence]);
 
-  const darkCenterFrame = getFrameIndex(CENTER_PROGRESS, darkSequence.frameCount);
-  const lightCenterFrame = getFrameIndex(CENTER_PROGRESS, lightSequence.frameCount);
+  const centerFrame = getFrameIndex(CENTER_PROGRESS, sequence.frameCount);
 
   return (
     <div className={`cursor-frame-sequence ${className ?? ""}`} ref={rootRef}>
       <div className="portraitFrameSequenceCanvas">
+        {/* The raw image is a same-path poster fallback for the canvas frame cache. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          ref={darkImageRef}
-          className="portraitFrame portraitFrameDark cursor-frame-sequence__media cursor-frame-sequence__media--dark"
-          src={getFrameSrc(darkSequence, darkCenterFrame)}
-          data-frame-index={darkCenterFrame}
+          className="cursor-frame-sequence__poster"
+          src={getFrameSrc(sequence, centerFrame)}
           width={960}
           height={960}
           alt=""
@@ -400,21 +478,7 @@ export function CursorScrubFrameSequence({
           onContextMenu={(event) => event.preventDefault()}
           onDragStart={(event) => event.preventDefault()}
         />
-        <img
-          ref={lightImageRef}
-          className="portraitFrame portraitFrameLight cursor-frame-sequence__media cursor-frame-sequence__media--light"
-          src={getFrameSrc(lightSequence, lightCenterFrame)}
-          data-frame-index={lightCenterFrame}
-          width={960}
-          height={960}
-          alt=""
-          loading="eager"
-          decoding="async"
-          aria-hidden="true"
-          draggable={false}
-          onContextMenu={(event) => event.preventDefault()}
-          onDragStart={(event) => event.preventDefault()}
-        />
+        <canvas className="cursor-frame-sequence__canvas" ref={canvasRef} aria-hidden="true" />
         <span className="darkEmbeddedLogoCover" aria-hidden="true" />
       </div>
     </div>
