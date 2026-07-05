@@ -110,11 +110,11 @@ export const projects = [
     description:
       "Thai Nari is a website concept for a Thai wellness studio, designed to translate the calm atmosphere of the physical space into a refined and easy-to-explore digital experience.",
     visualSystem:
-      "A warm, tactile palette - cream and beige against near-black - makes the calm interior feel like it's floating inside the interface, not printed on a template.",
+      "A warm, tactile palette - cream and beige floating on near-black - so the calm of a physical treatment room survives the jump into a screen instead of flattening into another spa template.",
     typography:
-      "A soft pixel headline sits above quiet, plain body text - the same contrast between ritual and practicality that defines an actual spa visit.",
+      "A soft display headline sits above quiet, unhurried body text - the same contrast between ritual and practicality you feel walking from the reception desk into a treatment room.",
     motion:
-      "Panels unfold like doors opening onto a treatment room - slow, deliberate reveals instead of quick fades, matching the pace of a real visit rather than a scroll.",
+      "Panels unfold like doors opening onto a private room - slow, deliberate reveals instead of quick fades, paced like an actual visit rather than a scroll session.",
     context:
       "Wellness studios often end up with generic spa templates that photograph well but explain nothing about the actual experience of walking in.",
     direction:
@@ -199,9 +199,9 @@ export const projects = [
     visualSystem:
       "Everything here doubles as a live demo - the grid, the type scale, the color system are the actual production styles a client would get, not a mockup wrapped around fake content.",
     typography:
-      "A pixel display face carries only headlines and labels; every paragraph stays in a plain grotesk, so the accent reads as a signature, not a readability tax.",
+      "A single geometric display face carries every headline; body copy stays in a plain grotesk, so the one accent left in the type system is a deliberate signature, not decoration.",
     motion:
-      "Word-by-word reveals and letter-swap hovers exist to prove the animation is hand-built with GSAP, not a template effect - the kind of detail a client notices without being told.",
+      "Word-by-word reveals, a magnetic cursor and letter-swap hovers exist to prove the interaction is hand-built with GSAP, not a template effect - the kind of detail a client notices without being told why the site feels different.",
     context:
       "A freelancer's site usually reads like a brochure - logo, services, contact - and proves nothing about how the person actually builds. This one had to work as the strongest case study in the whole portfolio.",
     direction:

@@ -28,6 +28,10 @@ function getFrameIndex(progress: number, frameCount: number) {
   return Math.round(clamp(progress) * Math.max(frameCount - 1, 0));
 }
 
+function getScrollFrameIndex(progress: number, frameCount: number) {
+  return Math.min(Math.floor(clamp(progress) * frameCount), Math.max(frameCount - 1, 0));
+}
+
 function getFrameSrc(sequence: FrameSequence, index: number) {
   const extension = sequence.extension ?? "webp";
   const pad = sequence.pad ?? 3;
@@ -92,6 +96,7 @@ export function CursorScrubFrameSequence({
   const currentImageRef = useRef<HTMLImageElement | null>(null);
   const reducedMotionRef = useRef(false);
   const finePointerRef = useRef(false);
+  const coarsePointerRef = useRef(false);
   const draggingRef = useRef(false);
   const trackingRef = useRef(false);
   const destroyedRef = useRef(false);
@@ -114,10 +119,14 @@ export function CursorScrubFrameSequence({
     const context = canvasElement.getContext("2d", { alpha: true });
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const scrollScrubElement = rootElement.closest<HTMLElement>(".hero-portrait-frame") ?? rootElement;
     const centerFrame = getFrameIndex(CENTER_PROGRESS, sequence.frameCount);
     const preloadOrder = getPreloadOrder(sequence.frameCount, centerFrame);
     let preloadCursor = 0;
     let activePreloads = 0;
+    let scrollScrubVisible = false;
+    let scrollScrubFrameRef: number | null = null;
 
     destroyedRef.current = false;
     rootElement.dataset.ready = "false";
@@ -230,6 +239,10 @@ export function CursorScrubFrameSequence({
           if (!reducedMotionRef.current) {
             rootElement.dataset.interactive = "true";
             preloadFrames();
+
+            if (coarsePointerRef.current) {
+              scheduleScrollScrubFrame();
+            }
           }
         })
         .catch(() => {
@@ -279,8 +292,56 @@ export function CursorScrubFrameSequence({
       }
     }
 
+    function syncToFrameIndex(targetIndex: number) {
+      const nearestIndex = findNearestCachedFrame(frameCacheRef.current, targetIndex, sequence.frameCount);
+
+      if (nearestIndex !== null) {
+        drawFrame(nearestIndex);
+      }
+
+      if (!frameCacheRef.current.has(targetIndex)) {
+        void loadFrame(targetIndex).catch(() => undefined);
+      }
+    }
+
+    function getScrollScrubProgress() {
+      const rect = scrollScrubElement.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight || document.documentElement.clientHeight, 1);
+      const travel = viewportHeight + Math.max(rect.height, 1);
+
+      return clamp((viewportHeight - rect.top) / travel);
+    }
+
+    function updateScrollScrubFrame() {
+      scrollScrubFrameRef = null;
+
+      if (
+        reducedMotionRef.current ||
+        !coarsePointerRef.current ||
+        !scrollScrubVisible ||
+        rootElement.dataset.ready !== "true"
+      ) {
+        return;
+      }
+
+      const frameIndex = getScrollFrameIndex(getScrollScrubProgress(), sequence.frameCount);
+      syncToFrameIndex(frameIndex);
+    }
+
+    function scheduleScrollScrubFrame() {
+      if (scrollScrubFrameRef !== null) {
+        return;
+      }
+
+      scrollScrubFrameRef = window.requestAnimationFrame(updateScrollScrubFrame);
+    }
+
     function centerImmediately() {
       cancelAnimationFrameIfNeeded();
+      if (scrollScrubFrameRef !== null) {
+        window.cancelAnimationFrame(scrollScrubFrameRef);
+        scrollScrubFrameRef = null;
+      }
       targetProgressRef.current = CENTER_PROGRESS;
       currentProgressRef.current = CENTER_PROGRESS;
       setTracking(false);
@@ -361,7 +422,7 @@ export function CursorScrubFrameSequence({
     }
 
     function handleTouchPointerDown(event: PointerEvent) {
-      if (finePointerRef.current || reducedMotionRef.current || event.pointerType === "mouse") {
+      if (coarsePointerRef.current || finePointerRef.current || reducedMotionRef.current || event.pointerType === "mouse") {
         return;
       }
 
@@ -403,6 +464,7 @@ export function CursorScrubFrameSequence({
     function syncMotionPreferences() {
       reducedMotionRef.current = reducedMotionQuery.matches;
       finePointerRef.current = finePointerQuery.matches;
+      coarsePointerRef.current = coarsePointerQuery.matches;
 
       if (reducedMotionRef.current) {
         rootElement.dataset.interactive = "false";
@@ -413,6 +475,12 @@ export function CursorScrubFrameSequence({
       if (rootElement.dataset.ready === "true") {
         rootElement.dataset.interactive = "true";
         preloadFrames();
+      }
+
+      if (coarsePointerRef.current) {
+        setTracking(false);
+        scheduleScrollScrubFrame();
+        return;
       }
 
       if (!finePointerRef.current) {
@@ -427,6 +495,16 @@ export function CursorScrubFrameSequence({
     });
 
     resizeObserver.observe(canvasElement);
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        scrollScrubVisible = Boolean(entry?.isIntersecting);
+        scheduleScrollScrubFrame();
+      },
+      { threshold: [0, 0.2, 0.5, 0.8, 1] }
+    );
+
+    intersectionObserver.observe(scrollScrubElement);
     syncMotionPreferences();
     revealCenterFrame();
 
@@ -437,13 +515,21 @@ export function CursorScrubFrameSequence({
     rootElement.addEventListener("pointermove", handleTouchPointerMove, { passive: true });
     rootElement.addEventListener("pointerup", finishTouchScrub);
     rootElement.addEventListener("pointercancel", finishTouchScrub);
+    window.addEventListener("scroll", scheduleScrollScrubFrame, { passive: true });
+    window.addEventListener("resize", scheduleScrollScrubFrame);
     reducedMotionQuery.addEventListener("change", syncMotionPreferences);
     finePointerQuery.addEventListener("change", syncMotionPreferences);
+    coarsePointerQuery.addEventListener("change", syncMotionPreferences);
 
     return () => {
       destroyedRef.current = true;
       cancelAnimationFrameIfNeeded();
+      if (scrollScrubFrameRef !== null) {
+        window.cancelAnimationFrame(scrollScrubFrameRef);
+        scrollScrubFrameRef = null;
+      }
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       frameCacheRef.current.clear();
       pendingFramesRef.current.clear();
       window.removeEventListener("pointermove", handleWindowPointerMove);
@@ -453,8 +539,11 @@ export function CursorScrubFrameSequence({
       rootElement.removeEventListener("pointermove", handleTouchPointerMove);
       rootElement.removeEventListener("pointerup", finishTouchScrub);
       rootElement.removeEventListener("pointercancel", finishTouchScrub);
+      window.removeEventListener("scroll", scheduleScrollScrubFrame);
+      window.removeEventListener("resize", scheduleScrollScrubFrame);
       reducedMotionQuery.removeEventListener("change", syncMotionPreferences);
       finePointerQuery.removeEventListener("change", syncMotionPreferences);
+      coarsePointerQuery.removeEventListener("change", syncMotionPreferences);
     };
   }, [sequence]);
 

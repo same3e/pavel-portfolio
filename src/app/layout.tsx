@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter_Tight, Pixelify_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Inter_Tight, Onest } from "next/font/google";
 import { MotionShell } from "@/components/MotionShell";
 import { site } from "@/content/portfolio";
 import "./globals.css";
 
-const pixelifySans = Pixelify_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const onest = Onest({
+  subsets: ["latin", "cyrillic"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-display",
   display: "swap"
 });
@@ -83,7 +83,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pixelifySans.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
+      <body className={`${onest.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>

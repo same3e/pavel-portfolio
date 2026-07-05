@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { MagneticCursor } from "@/components/MagneticCursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 type TransitionPhase = "idle" | "covering" | "covered" | "revealing";
 
@@ -149,6 +151,8 @@ export function MotionShell({ children }: { children: React.ReactNode }) {
   return (
     <MotionContext.Provider value={value}>
       <div className="site-ready">{children}</div>
+      <MagneticCursor />
+      <ScrollProgress />
 
       <div className={`route-transition route-transition--${transition.phase}`} aria-hidden="true">
         <div className="route-transition-columns">

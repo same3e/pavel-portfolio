@@ -8,7 +8,7 @@ Editorial portfolio for Pavel Kostin, an independent web designer and developer 
 - React
 - TypeScript
 - CSS in `src/app/globals.css`
-- `next/font/google` with Pixelify Sans, Inter Tight and IBM Plex Mono
+- `next/font/google` with Onest, Inter Tight and IBM Plex Mono
 
 ## Requirements
 
@@ -100,7 +100,7 @@ The site is deployable as a standard Next.js project on Vercel. Keep `site.produ
 
 The site uses free Google Fonts through `next/font/google`:
 
-- Pixelify Sans for large pixel-display moments.
+- Onest for large display moments.
 - Inter Tight for body and interface text.
 - IBM Plex Mono for metadata and technical labels.
 

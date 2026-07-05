@@ -167,8 +167,8 @@ export function ProjectCase({ project }: { project: Project }) {
           <div>
             <SplitRevealText
               as="h2"
-              ariaLabel="LET'S MAKE SOMETHING MEMORABLE"
-              lines={["LET'S MAKE", "SOMETHING", "MEMORABLE"]}
+              ariaLabel="Let's make something memorable"
+              lines={["Let's make", "something", "memorable"]}
               mode="scroll"
             />
             <p>Have a project or business that needs a stronger digital presence?</p>

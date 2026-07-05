@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ContactLinks, Footer, Header } from "@/components/SiteChrome";
 import { HeroPortrait } from "@/components/HeroPortrait";
 import { LetterSwapText } from "@/components/LetterSwapText";
+import { MarqueeStrip } from "@/components/MarqueeStrip";
 import { SelectedWork } from "@/components/SelectedWork";
 import { SplitRevealText } from "@/components/SplitRevealText";
 import { aboutCopy, contact, hero, homepageServices, site } from "@/content/portfolio";
@@ -49,6 +50,8 @@ export default function Home() {
 
         <SelectedWork />
 
+        <MarqueeStrip />
+
         <section className="services service-section section-grid" id="services">
           <div className="service-intro">
             <SplitRevealText
@@ -95,8 +98,8 @@ export default function Home() {
           <div>
             <SplitRevealText
               as="h2"
-              ariaLabel="LET'S MAKE SOMETHING MEMORABLE"
-              lines={["LET'S MAKE", "SOMETHING", "MEMORABLE"]}
+              ariaLabel="Let's make something memorable"
+              lines={["Let's make", "something", "memorable"]}
               mode="scroll"
             />
             <p>Have a project or business that needs a stronger digital presence?</p>
