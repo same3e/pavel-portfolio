@@ -67,7 +67,12 @@ export function Header() {
     <>
       <header className="site-header">
         <Link className="brand" href="/" aria-label="Pavel portfolio home">
-          <LetterSwapText label="PAVEL · DEVELOP" />
+          <span className="brand-label brand-label--desktop">
+            <LetterSwapText label="PAVEL · DEVELOP" />
+          </span>
+          <span className="brand-label brand-label--mobile">
+            <LetterSwapText label="PAVEL.DEV" />
+          </span>
         </Link>
         <nav className="desktop-nav" aria-label="Primary navigation">
           {navigation.map((item) => (

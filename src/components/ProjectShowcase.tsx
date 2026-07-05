@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { SplitRevealText } from "@/components/SplitRevealText";
 import type { ProjectShowcase as ProjectShowcaseData } from "@/content/portfolio";
 
@@ -28,6 +28,13 @@ export function ProjectShowcase({
   interludeText
 }: ProjectShowcaseProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const mediaRef = useRef<HTMLDivElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const itemCount = showcase.screens.length || showcase.placeholderCount || 0;
+  const galleryLabel = useMemo(
+    () => `${showcase.title} gallery with ${itemCount} ${itemCount === 1 ? "item" : "items"}`,
+    [itemCount, showcase.title]
+  );
   const sizes =
     variant === "desktop"
       ? "(max-width: 768px) 100vw, (max-width: 1200px) 92vw, 90vw"
@@ -79,6 +86,58 @@ export function ProjectShowcase({
     { dependencies: [showcase, variant], scope: sectionRef }
   );
 
+  useEffect(() => {
+    const media = mediaRef.current;
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+
+    if (!media || !mobileQuery.matches || itemCount <= 1) {
+      setActiveIndex(0);
+      return;
+    }
+
+    const mediaElement = media;
+    let frameId: number | null = null;
+
+    function updateActiveIndex() {
+      frameId = null;
+
+      const items = Array.from(mediaElement.querySelectorAll<HTMLElement>("[data-showcase-item]"));
+      const mediaLeft = mediaElement.getBoundingClientRect().left;
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      items.forEach((item, index) => {
+        const distance = Math.abs(item.getBoundingClientRect().left - mediaLeft);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    }
+
+    function scheduleUpdate() {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = window.requestAnimationFrame(updateActiveIndex);
+    }
+
+    updateActiveIndex();
+    mediaElement.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      mediaElement.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [itemCount, showcase]);
+
   return (
     <section
       className={`project-showcase project-showcase--${variant} ${hideCaptions ? "project-showcase--no-captions" : ""}`}
@@ -98,10 +157,15 @@ export function ProjectShowcase({
         </header>
       ) : null}
 
-      <div className="project-showcase__media">
+      <div className="project-showcase__media" ref={mediaRef} aria-label={galleryLabel}>
         {showcase.screens.map((screen, index) => (
           <Fragment key={screen.src}>
-            <figure className="project-showcase__item" data-showcase-item>
+            <figure
+              className="project-showcase__item"
+              data-showcase-item
+              tabIndex={0}
+              aria-label={`${String(index + 1).padStart(2, "0")} of ${itemCount}: ${screen.caption}`}
+            >
               <div className="project-showcase__image">
                 <Image
                   src={screen.src}
@@ -130,6 +194,8 @@ export function ProjectShowcase({
               <figure
                 className="project-showcase__item project-showcase__item--placeholder"
                 data-showcase-item
+                tabIndex={0}
+                aria-label={`${String(index + 1).padStart(2, "0")} of ${itemCount}: mobile screenshot placeholder`}
                 key={`placeholder-${index}`}
               >
                 <div className="project-showcase__placeholder">
@@ -140,6 +206,11 @@ export function ProjectShowcase({
             ))
           : null}
       </div>
+      {itemCount > 1 ? (
+        <div className="project-showcase__counter" aria-hidden="true">
+          {String(activeIndex + 1).padStart(2, "0")} / {String(itemCount).padStart(2, "0")}
+        </div>
+      ) : null}
     </section>
   );
 }

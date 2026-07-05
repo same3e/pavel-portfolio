@@ -65,6 +65,7 @@ export default function Home() {
               mode="scroll"
             />
           </div>
+          <span className="service-block-label">SERVICES / 04</span>
           <div className="service-list">
             {serviceCards.map((service) => (
               <article className="service-row" key={service.title}>

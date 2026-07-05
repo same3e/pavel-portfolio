@@ -16,7 +16,6 @@ function ProjectPreviewMedia({ project, mediaRef }: { project: Project; mediaRef
         width={1600}
         height={1050}
         sizes="(max-width: 900px) 100vw, 48vw"
-        priority={project.id === "thai-nari"}
       />
     </div>
   );
@@ -64,7 +63,7 @@ export function SelectedWork() {
     alignPreviewToProject(activeIndex);
 
     const media = mediaRef.current;
-    if (!media) {
+    if (!media || window.matchMedia("(max-width: 1024px)").matches) {
       return;
     }
 
@@ -97,6 +96,10 @@ export function SelectedWork() {
   }, [activeIndex, alignPreviewToProject]);
 
   function activatePreview(index: number) {
+    if (window.matchMedia("(max-width: 1024px)").matches) {
+      return;
+    }
+
     setActiveIndex(index);
     alignPreviewToProject(index);
   }
@@ -112,10 +115,10 @@ export function SelectedWork() {
 
   return (
     <section className="selected-work" id="work" aria-labelledby="work-title">
-      <div className="selected-work-inner" ref={sectionRef}>
-        <div className="work-list-panel">
-          <h2 id="work-title" className="sr-only">Selected work</h2>
+      <h2 id="work-title" className="sr-only">Selected work</h2>
 
+      <div className="selected-work-inner selected-work-desktop" ref={sectionRef}>
+        <div className="work-list-panel">
           <div className="work-list" aria-label="Selected projects">
             {projects.map((project, index) => (
               <a
@@ -173,6 +176,48 @@ export function SelectedWork() {
             </div>
           </div>
         </aside>
+      </div>
+
+      <div className="selected-work-mobile" aria-label="Selected projects">
+        {projects.map((project) => (
+          <article className="mobile-work-item" key={project.id}>
+            <a
+              className="mobile-work-title"
+              href={project.route}
+              onClick={(event) => handleProjectClick(event, project)}
+            >
+              <strong>{project.title}</strong>
+            </a>
+            <p className="mobile-work-category">{project.category}</p>
+            <div className="mobile-work-media">
+              <Image
+                src={project.previewImage}
+                alt={project.alt}
+                width={1600}
+                height={1050}
+                sizes="(max-width: 1024px) calc(100vw - 32px), 1px"
+              />
+            </div>
+            <p className="mobile-work-summary">{project.description}</p>
+            <dl className="mobile-work-meta">
+              <div>
+                <dt>Year</dt>
+                <dd>{project.year}</dd>
+              </div>
+              <div>
+                <dt>Type</dt>
+                <dd>{project.type}</dd>
+              </div>
+            </dl>
+            <a
+              className="mobile-work-link text-cta"
+              href={project.route}
+              onClick={(event) => handleProjectClick(event, project)}
+            >
+              <LetterSwapText label="Explore case" />
+            </a>
+          </article>
+        ))}
       </div>
     </section>
   );

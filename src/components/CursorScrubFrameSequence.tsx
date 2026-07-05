@@ -97,6 +97,7 @@ export function CursorScrubFrameSequence({
   const reducedMotionRef = useRef(false);
   const finePointerRef = useRef(false);
   const coarsePointerRef = useRef(false);
+  const staticPosterRef = useRef(false);
   const draggingRef = useRef(false);
   const trackingRef = useRef(false);
   const destroyedRef = useRef(false);
@@ -236,13 +237,11 @@ export function CursorScrubFrameSequence({
           drawFrame(centerFrame);
           rootElement.dataset.ready = "true";
 
-          if (!reducedMotionRef.current) {
+          if (!reducedMotionRef.current && !staticPosterRef.current) {
             rootElement.dataset.interactive = "true";
             preloadFrames();
-
-            if (coarsePointerRef.current) {
-              scheduleScrollScrubFrame();
-            }
+          } else {
+            rootElement.dataset.interactive = "false";
           }
         })
         .catch(() => {
@@ -253,7 +252,7 @@ export function CursorScrubFrameSequence({
     }
 
     function preloadNextFrame() {
-      if (destroyedRef.current || reducedMotionRef.current) {
+      if (destroyedRef.current || reducedMotionRef.current || staticPosterRef.current) {
         return;
       }
 
@@ -317,6 +316,7 @@ export function CursorScrubFrameSequence({
 
       if (
         reducedMotionRef.current ||
+        staticPosterRef.current ||
         !coarsePointerRef.current ||
         !scrollScrubVisible ||
         rootElement.dataset.ready !== "true"
@@ -329,6 +329,10 @@ export function CursorScrubFrameSequence({
     }
 
     function scheduleScrollScrubFrame() {
+      if (staticPosterRef.current) {
+        return;
+      }
+
       if (scrollScrubFrameRef !== null) {
         return;
       }
@@ -372,7 +376,7 @@ export function CursorScrubFrameSequence({
     }
 
     function scheduleTimelineStep() {
-      if (reducedMotionRef.current || rootElement.dataset.ready !== "true") {
+      if (reducedMotionRef.current || staticPosterRef.current || rootElement.dataset.ready !== "true") {
         return;
       }
 
@@ -465,8 +469,9 @@ export function CursorScrubFrameSequence({
       reducedMotionRef.current = reducedMotionQuery.matches;
       finePointerRef.current = finePointerQuery.matches;
       coarsePointerRef.current = coarsePointerQuery.matches;
+      staticPosterRef.current = coarsePointerQuery.matches || window.innerWidth <= 768;
 
-      if (reducedMotionRef.current) {
+      if (reducedMotionRef.current || staticPosterRef.current) {
         rootElement.dataset.interactive = "false";
         centerImmediately();
         return;
@@ -475,12 +480,6 @@ export function CursorScrubFrameSequence({
       if (rootElement.dataset.ready === "true") {
         rootElement.dataset.interactive = "true";
         preloadFrames();
-      }
-
-      if (coarsePointerRef.current) {
-        setTracking(false);
-        scheduleScrollScrubFrame();
-        return;
       }
 
       if (!finePointerRef.current) {

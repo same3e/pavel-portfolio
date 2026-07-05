@@ -76,11 +76,14 @@ export function ProjectCase({ project }: { project: Project }) {
             <span><i>{project.title}</i></span>
           </h1>
           <p>{project.description}</p>
+          <a className="case-live-mobile text-cta" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+            <LetterSwapText label="Live website ↗" />
+          </a>
           <div className="case-meta">
             <MetaItem label="Role" value={project.role} />
             <MetaItem label="Year" value={project.year} />
             <MetaItem label="Type" value={project.type} />
-            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+            <a className="case-live-meta" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
               <LetterSwapText label="Live website ↗" />
             </a>
           </div>

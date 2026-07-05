@@ -52,7 +52,7 @@ export const homepageServices = [
 ];
 
 export const aboutCopy =
-  "Independent web designer and developer based in Tbilisi, creating clear websites, booking flows and lightweight digital tools for service businesses";
+  "I'm Pavel - an independent designer and developer based in Tbilisi. I build clear, fast websites and booking flows for service businesses that want to look as good as they perform.";
 
 export type ProjectScreen = {
   src: string;
