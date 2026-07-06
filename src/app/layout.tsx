@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
-import { IBM_Plex_Mono, Inter_Tight, Pixelify_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Inter_Tight, Montserrat } from "next/font/google";
 import { MotionShell } from "@/components/MotionShell";
 import { defaultLocale, dictionary, getSite, type Locale } from "@/content/portfolio";
 import "./globals.css";
 
-const pixelifySans = Pixelify_Sans({
+const montserrat = Montserrat({
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-display",
   display: "swap"
 });
@@ -90,7 +91,7 @@ export default async function RootLayout({
 
   return (
     <html lang={dictionary[locale].htmlLang}>
-      <body className={`${pixelifySans.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
+      <body className={`${montserrat.variable} ${interTight.variable} ${ibmPlexMono.variable}`}>
         <a className="skip-link" href="#main-content">
           {dictionary[locale].skipLink}
         </a>

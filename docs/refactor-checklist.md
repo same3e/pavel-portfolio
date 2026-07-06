@@ -39,7 +39,7 @@ Baseline before implementation:
 
 - [x] VERIFIED - `git diff --check` exit 0.
 - [x] VERIFIED - `npm run lint` exit 0.
-- [ ] NOT COMPLETED - `npm run build` exit 1: failed to fetch `Pixelify Sans`, `Inter Tight`, and `IBM Plex Mono` from Google Fonts.
+- [ ] NOT COMPLETED - `npm run build` exit 1: failed to fetch Google Fonts.
 - [x] VERIFIED - `rg "introProgress|introVisible|introResolved|activeService" src` returned no matches.
 - [x] VERIFIED - `rg "MS Serif|Arial Narrow|Cascadia Mono|font-smooth" src` returned no matches.
 - [x] VERIFIED - `rg '"latest"' package.json` returned no matches.

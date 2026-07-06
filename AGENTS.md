@@ -106,7 +106,7 @@ Use `next/font`.
 
 Required fonts:
 
-- `Pixelify Sans` for display typography;
+- `Montserrat` for display typography;
 - `Inter Tight` for body and interface text;
 - `IBM Plex Mono` for metadata and technical labels.
 
@@ -120,7 +120,7 @@ Create and use CSS variables:
 --font-mono
 ```
 
-Use `Pixelify Sans` only for:
+Use `Montserrat` for:
 
 - hero title;
 - large section headings;
@@ -1017,7 +1017,7 @@ Run deeper checks only when:
 
 The task is complete only when all of the following are true:
 
-- Pixelify Sans is loaded through `next/font/google`;
+- Montserrat is loaded through `next/font/google`;
 - Inter Tight is used for body text;
 - IBM Plex Mono is used for metadata;
 - old fake pixel font stacks are removed;
